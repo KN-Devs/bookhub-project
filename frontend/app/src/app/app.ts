@@ -1,27 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ApiService } from './services/api';
+import {FooterView} from './View/Footer/footer-view/footer-view';
+import {HeaderView} from './View/Header/header-view/header-view';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  standalone: true,
+  imports: [RouterOutlet, FooterView, HeaderView],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit {
-
-  message: string = '';
-
-  constructor(private api: ApiService) {}
-
-  ngOnInit() {
-    this.api.getTest().subscribe(data => {
-      console.log('MESSAGE AVANT:', this.message);
-      this.message = data;
-      console.log('MESSAGE APRES:', this.message);
-      console.log(data);
-      console.log("API CALL lancé");
-    });
-  }
+export class App {
+  protected readonly title = signal('Frontend-Angular');
 }
