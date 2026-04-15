@@ -1,0 +1,29 @@
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-box input {
+  padding: 6px 10px;
+  border: 1px solid black;
+  border-radius: 4px;
+  outline: none;
+  width: 200px;
+}
+
+.search-box input:focus {
+  border-color: #2196f3;
+}
+
+.search-box button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.search-box button:hover {
+  background-color: #f0f0f0;
+}

@@ -1,0 +1,28 @@
+
+
+<h1>Bienvenue sur BookHub</h1>
+
+<form (ngSubmit)="login()">
+
+  <label for="login">Login</label>
+  <input id="login" type="text" name="login" required/>
+
+  <label for="password">Password</label>
+  <input id="password" type="password" name="password" required/>
+
+  <div>
+    <label for="rememberMe">Se souvenir de moi</label>
+    <input id="rememberMe" type="checkbox" name="rememberMe"/>
+  </div>
+
+  <button type="submit">
+    Se connecter
+  </button>
+
+  <button type="button" (click)="register()">
+    S'enregistrer
+  </button>
+
+</form>
+
+
