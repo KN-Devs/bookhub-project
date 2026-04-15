@@ -1,0 +1,25 @@
+.books-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 15px;
+
+  padding: 20px;
+}
+.book-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  background: #f9f9f9;
+}
+
+.book-card button {
+  padding: 6px 10px;
+  border: 1px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 90%;
+  margin: 5px;
+  background-color: #2196f3;
+}
