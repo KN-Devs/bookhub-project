@@ -1,4 +1,4 @@
-package fr.eni.bookhub;
+package fr.bookhub;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
