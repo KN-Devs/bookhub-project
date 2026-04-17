@@ -32,6 +32,15 @@ public class Book {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "total_copies", nullable = false)
+    private int totalCopies = 1;
+
+    @Column(name = "available_copies", nullable = false)
+    private int availableCopies = 1;
+
+    @Column(name = "average_rating")
+    private Double averageRating;
+
     // Relation avec Category
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
@@ -125,4 +134,27 @@ public class Book {
         this.category = category;
     }
 
+    public int getAvailableCopies() {
+        return availableCopies;
+    }
+
+    public void setAvailableCopies(int availableCopies) {
+        this.availableCopies = availableCopies;
+    }
+
+    public int getTotalCopies() {
+        return totalCopies;
+    }
+
+    public void setTotalCopies(int totalCopies) {
+        this.totalCopies = totalCopies;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
 }

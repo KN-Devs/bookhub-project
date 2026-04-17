@@ -3,13 +3,15 @@ export interface Book {
   title: string;
   author: string;
   isbn: string;
-  category?: string;
   description?: string;
-  coverUrl?: string;
-  availableCopies: number;
-  totalCopies: number;
-  averageRating?: number;
+  coverImage?: string;
+  isAvailable: boolean;
+  availableCopies?: number;
+  totalCopies?: number;
   createdAt?: string;
-  isAvailable?: boolean;
-  reservedCopies?: number;
+  category?: {
+    id: number;
+    name: string;
+  };
+  averageRating?: number;
 }

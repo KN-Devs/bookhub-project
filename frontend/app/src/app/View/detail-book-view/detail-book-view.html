@@ -5,40 +5,46 @@
       Chargement du livre...
     </div>
   } @else {
+
     <div class="book-header">
 
       <div class="cover">
-        <img [src]="'https://covers.openlibrary.org/b/isbn/' + book.isbn + '-M.jpg'" alt="book cover">
+        <img
+          [src]="'https://covers.openlibrary.org/b/isbn/' + book.isbn + '-M.jpg'"
+          alt="book cover">
       </div>
 
       <div class="info">
         <h1>{{ book.title }}</h1>
-        <p class="author"> L'auteur: {{ book.author }}</p>
+        <p class="author"> {{ book.author }}</p>
         <p class="isbn">ISBN : {{ book.isbn }}</p>
+
         @if (book.category) {
-          <span class="category">Categorie : {{ book.category }}</span>
+          <span class="category">
+            {{ book.category.name }}
+          </span>
         }
 
         <p class="stock">
-           {{ book.availableCopies }} / {{ book.totalCopies }} disponibles
+          {{ book.availableCopies }} / {{ book.totalCopies }} disponibles
         </p>
 
-        <span class="badge"
-              [class.ok]="book.availableCopies > 0"
-              [class.empty]="book.availableCopies === 0">
-          {{ book.availableCopies > 0 ? 'Disponible' : 'Indisponible' }}
-        </span>
+        @if (book.isAvailable) {
+          <p class="status_ok">Disponible</p>
+        } @else {
+          <p class="status_empty">Indisponible</p>
+        }
 
         @if (book.averageRating !== undefined) {
           <p class="rating">
-            {{ book.averageRating }} / 5
+            ⭐ {{ book.averageRating }} / 5
           </p>
         }
-
         <button class="btn"
                 [disabled]="book.availableCopies === 0">
           Réserver ce livre
         </button>
+
       </div>
     </div>
 
@@ -48,6 +54,7 @@
         {{ book.description || 'Aucune description disponible pour ce livre.' }}
       </p>
     </div>
+
   }
 
 </div>

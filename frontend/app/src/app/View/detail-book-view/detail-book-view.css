@@ -4,23 +4,23 @@
   padding: 20px;
   font-family: Arial, sans-serif;
   color: #222;
+  background-color: #f9f9f9;
 }
 
-/* LOADING */
 .loading {
   text-align: center;
   padding: 60px;
   font-size: 18px;
 }
 
-/* HEADER */
 .book-header {
   display: flex;
   gap: 30px;
+  flex-direction: row;
+
   align-items: flex-start;
 }
 
-/* COVER */
 .cover img {
   width: 220px;
   height: 320px;
@@ -29,7 +29,6 @@
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* INFO */
 .info h1 {
   margin: 0;
   font-size: 32px;
@@ -46,7 +45,31 @@
   color: #777;
 }
 
-/* CATEGORY */
+.status {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.status_ok {
+  color: #1f9d55;
+  font-weight: 600;
+  padding: 4px 10px;
+  display: inline-block;
+  background: #eafaf1;
+  border: 1px solid #b7ebc6;
+  border-radius: 6px;
+}
+
+.status_empty {
+  color: #c0392b;
+  font-weight: 600;
+  padding: 4px 10px;
+  display: inline-block;
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+}
+
 .category {
   display: inline-block;
   margin-top: 10px;
@@ -56,12 +79,10 @@
   font-size: 12px;
 }
 
-/* STOCK */
 .stock {
   margin-top: 10px;
 }
 
-/* BADGE */
 .badge {
   display: inline-block;
   margin-top: 10px;
@@ -79,13 +100,11 @@
   background: #e74c3c;
 }
 
-/* RATING */
 .rating {
   margin-top: 10px;
   font-weight: bold;
 }
 
-/* BUTTON */
 .btn {
   margin-top: 15px;
   padding: 10px 16px;
