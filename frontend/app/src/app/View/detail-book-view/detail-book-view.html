@@ -21,15 +21,14 @@
 
         @if (book.category) {
           <span class="category">
-            {{ book.category.name }}
+           Catégorie : {{ book.category.name }}
           </span>
         }
 
         <p class="stock">
           {{ book.availableCopies }} / {{ book.totalCopies }} disponibles
         </p>
-
-        @if (book.isAvailable) {
+        @if (book.available) {
           <p class="status_ok">Disponible</p>
         } @else {
           <p class="status_empty">Indisponible</p>
@@ -37,7 +36,7 @@
 
         @if (book.averageRating !== undefined) {
           <p class="rating">
-            ⭐ {{ book.averageRating }} / 5
+            {{ book.averageRating }} / 5
           </p>
         }
         <button class="btn"

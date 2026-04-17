@@ -23,6 +23,7 @@ export class DetailBookView implements OnInit {
     this.bookService.getBookByIsbn(this.isbn).subscribe(data => {
       this.book = data
       this.cdr.detectChanges()
+      console.log(this.book)
     });
 
   }

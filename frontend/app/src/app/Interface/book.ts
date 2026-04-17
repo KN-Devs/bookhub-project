@@ -5,7 +5,7 @@ export interface Book {
   isbn: string;
   description?: string;
   coverImage?: string;
-  isAvailable: boolean;
+  available: boolean;
   availableCopies?: number;
   totalCopies?: number;
   createdAt?: string;
