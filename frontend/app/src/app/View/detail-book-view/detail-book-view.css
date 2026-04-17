@@ -1,0 +1,118 @@
+.book-detail {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #222;
+}
+
+/* LOADING */
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+}
+
+/* HEADER */
+.book-header {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+/* COVER */
+.cover img {
+  width: 220px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* INFO */
+.info h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.author {
+  margin-top: 10px;
+  color: #555;
+}
+
+.isbn {
+  margin-top: 5px;
+  font-size: 13px;
+  color: #777;
+}
+
+/* CATEGORY */
+.category {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #eef2ff;
+  font-size: 12px;
+}
+
+/* STOCK */
+.stock {
+  margin-top: 10px;
+}
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 12px;
+}
+
+.badge.ok {
+  background: #2ecc71;
+}
+
+.badge.empty {
+  background: #e74c3c;
+}
+
+/* RATING */
+.rating {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* BUTTON */
+.btn {
+  margin-top: 15px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #2980b9;
+}
+
+.btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* DESCRIPTION */
+.description {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.description h2 {
+  margin-bottom: 10px;
+}

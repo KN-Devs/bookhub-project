@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {Book} from '../../Interface/book';
 import {BookService} from '../../services/book-service';
@@ -12,7 +12,7 @@ import {BookService} from '../../services/book-service';
 })
 export class DetailBookView implements OnInit {
 
-  constructor(private route: ActivatedRoute, private bookService: BookService) {
+  constructor(private route: ActivatedRoute, private bookService: BookService, private cdr : ChangeDetectorRef) {
   }
 
   isbn: string = "";
@@ -22,8 +22,9 @@ export class DetailBookView implements OnInit {
     this.isbn = this.route.snapshot.paramMap.get('isbn')!;
     this.bookService.getBookByIsbn(this.isbn).subscribe(data => {
       this.book = data
+      this.cdr.detectChanges()
     });
-    console.log("les livres disponilbe : " + this.book);
+
   }
 
 }
