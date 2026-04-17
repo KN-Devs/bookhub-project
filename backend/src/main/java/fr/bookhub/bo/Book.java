@@ -1,4 +1,5 @@
-package fr.eni.bookhub.bo;
+package fr.bookhub.bo;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -10,10 +11,13 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String author;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String isbn;
 
     @Column(columnDefinition = "NVARCHAR(MAX)")
@@ -22,23 +26,23 @@ public class Book {
     @Column(name = "cover_image")
     private String coverImage;
 
-    @Column(name = "is_available")
-    private boolean isAvailable;
+    @Column(name = "is_available", nullable = false)
+    private boolean isAvailable = true;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @PrePersist
-    public void init() {
-        this.createdAt = LocalDateTime.now();
-        this.isAvailable = true;
-    }
+    // Relation avec Category
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Categories category;
+
 
     public Book() {
     }
 
-    public Book(Integer id, String title, String author, String isbn, String description, String coverImage, boolean isAvailable, LocalDateTime createdAt) {
-        this.id = id;
+    public Book(String title, String author, String isbn, String description,
+                String coverImage, boolean isAvailable, LocalDateTime createdAt, Categories category) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
@@ -46,6 +50,7 @@ public class Book {
         this.coverImage = coverImage;
         this.isAvailable = isAvailable;
         this.createdAt = createdAt;
+        this.category = category;
     }
 
     public Integer getId() {
@@ -110,5 +115,13 @@ public class Book {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Categories getCategory() {
+        return category;
+    }
+
+    public void setCategory(Categories category) {
+        this.category = category;
     }
 }

@@ -1,4 +1,4 @@
-package fr.eni.bookhub.security;
+package fr.bookhub.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
