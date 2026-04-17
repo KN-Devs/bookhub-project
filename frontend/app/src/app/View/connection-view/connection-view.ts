@@ -8,8 +8,6 @@ import {Router} from '@angular/router';
   selector: 'app-connection-view',
   imports: [
     FormsModule,
-    HeaderView,
-    FooterView
   ],
   templateUrl: './connection-view.html',
   styleUrl: './connection-view.css',
@@ -22,6 +20,7 @@ export class ConnectionView {
 
   protected login() {
     this.router.navigate(["viewBooks"]);
+
   }
 
   protected register() {

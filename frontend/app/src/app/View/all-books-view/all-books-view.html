@@ -1,12 +1,20 @@
-<div class="books-grid">
-  @for (book of books; track book.isbn) {
-    <div class="book-card">
-      <h3>{{ book.title }}</h3>
-      <p>{{ book.author }}</p>
-      <p>ISBN : {{ book.isbn }}</p>
-      <img [src]="'https://covers.openlibrary.org/b/isbn/' + book.isbn + '-M.jpg'" />
-      <button (click)="getDetails(book)">Detail</button>
-      <button (click)="reserver(book)">Reserver</button>
-    </div>
-  }
-</div>
+@if (books.length > 0) {
+  <div class="books-grid">
+    @for (book of books; track book.isbn) {
+      <div class="book-card">
+        <h3>{{ book.title }}</h3>
+        <p>{{ book.author }}</p>
+        <p>ISBN : {{ book.isbn }}</p>
+        <img [src]="'https://covers.openlibrary.org/b/isbn/' + book.isbn + '-M.jpg'" />
+        <button [routerLink]="['/viewBooks/detail', book.isbn]">
+          Détail
+        </button>
+        <button (click)="reserver(book)">
+          Réserver
+        </button>
+      </div>
+    }
+  </div>
+} @else {
+  <p>Chargement des livres...</p>
+}
