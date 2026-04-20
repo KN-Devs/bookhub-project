@@ -16,15 +16,15 @@
             <p class="author">{{ book.author }}</p>
             <span
               class="badge"
-              [class.available]="book.available"
-              [class.unavailable]="!book.available">
-              {{ book.available ? 'Disponible' : 'Indisponible' }}
+              [class.available]="(book.availableCopies>0)"
+              [class.unavailable]="(book.availableCopies<=0)">
+              {{ (book.availableCopies>0) ? 'Disponible' : 'Indisponible' }}
             </span>
             <button class="button_detail" [routerLink]="['/viewBooks/detail', book.isbn]">
               Détail
             </button>
           </div>
-          @if (book.available) {
+          @if ((book.availableCopies>0)) {
             <button class="button_emprunt" (click)="emprunter(book)">
               Emprunter
             </button>
