@@ -1,50 +1,35 @@
 package fr.bookhub.bo;
 
-
 import fr.bookhub.dal.BooksRepository;
 import fr.bookhub.dal.CategoriesRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-
-import java.time.LocalDateTime;
-
-import fr.bookhub.bo.Book;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import fr.bookhub.dal.BooksRepository;
-import fr.bookhub.dal.CategoriesRepository;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY) // Utilise H2 en mémoire
-
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Rollback(false)
-
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY) // ← une seule fois
+@Rollback(true) // ← true pour que chaque test repart d'une base propre
 class BookRepositoryTest {
 
     @Autowired
     private BooksRepository booksRepository;
 
     @Autowired
-    private CategoriesRepository categoryRepository;
+    private CategoriesRepository categoryRepository; // ← un seul champ, plus de doublon
 
     private Categories techCategory;
 
     @BeforeEach
     void setUp() {
-        // On crée une catégorie commune pour nos tests
         techCategory = new Categories();
         techCategory.setName("Technologie");
         categoryRepository.save(techCategory);
@@ -61,13 +46,15 @@ class BookRepositoryTest {
         Book savedBook = booksRepository.save(book);
 
         // Then
-        assertThat(savedBook.getId()).isGreaterThan(0);
+        assertThat(savedBook.getId()).isNotNull();
         assertThat(savedBook.getTitle()).isEqualTo("Effective Java");
+        assertThat(savedBook.getAuthor()).isEqualTo("Joshua Bloch");
+        assertThat(savedBook.getIsbn()).isEqualTo("978-0134685991");
         assertThat(savedBook.getCategory().getName()).isEqualTo("Technologie");
     }
 
     @Test
-    @DisplayName("Devrait enregistrer et compter plusieurs livres")
+    @DisplayName("Devrait enregistrer et retrouver plusieurs livres")
     void shouldSaveMultipleBooks() {
         // Given
         Book b1 = new Book("Clean Code", "R. Martin", "111-222", "Desc", null, true, LocalDateTime.now(), techCategory);
@@ -83,17 +70,14 @@ class BookRepositoryTest {
                 .containsExactlyInAnyOrder("Clean Code", "Design Patterns");
     }
 
-    private CategoriesRepository categoriesRepository;
-
     @Test
-    void test_save_4_books() {
-
-        // 1. Catégorie obligatoire
+    @DisplayName("Devrait enregistrer 4 livres et vérifier le premier")
+    void shouldSaveFourBooks() {
+        // Given
         Categories category = new Categories();
         category.setName("Programming");
-        category = categoriesRepository.save(category);
+        categoryRepository.save(category);
 
-        // 2. Livre 1
         Book book1 = new Book();
         book1.setTitle("Clean Code");
         book1.setAuthor("Robert C. Martin");
@@ -103,7 +87,6 @@ class BookRepositoryTest {
         book1.setCreatedAt(LocalDateTime.now());
         book1.setCategory(category);
 
-        // 3. Livre 2
         Book book2 = new Book();
         book2.setTitle("The Pragmatic Programmer");
         book2.setAuthor("Andrew Hunt & David Thomas");
@@ -113,7 +96,6 @@ class BookRepositoryTest {
         book2.setCreatedAt(LocalDateTime.now());
         book2.setCategory(category);
 
-        // 4. Livre 3
         Book book3 = new Book();
         book3.setTitle("Design Patterns");
         book3.setAuthor("Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides");
@@ -123,7 +105,6 @@ class BookRepositoryTest {
         book3.setCreatedAt(LocalDateTime.now());
         book3.setCategory(category);
 
-        // 5. Livre 4
         Book book4 = new Book();
         book4.setTitle("Refactoring");
         book4.setAuthor("Martin Fowler");
@@ -133,17 +114,21 @@ class BookRepositoryTest {
         book4.setCreatedAt(LocalDateTime.now());
         book4.setCategory(category);
 
-
-        // Appel du comportement
+        // When
         Book bookDB = booksRepository.save(book1);
         booksRepository.save(book2);
         booksRepository.save(book3);
         booksRepository.save(book4);
 
-        // Vérifications
+        List<Book> allBooks = booksRepository.findAll();
+
+        // Then
         assertThat(bookDB).isNotNull();
         assertThat(bookDB.getId()).isNotNull();
         assertThat(bookDB.getIsbn()).isEqualTo("9780132350884");
         assertThat(bookDB.getTitle()).isEqualTo("Clean Code");
+        assertThat(allBooks).hasSize(4);
+        assertThat(allBooks).extracting(Book::getTitle)
+                .containsExactlyInAnyOrder("Clean Code", "The Pragmatic Programmer", "Design Patterns", "Refactoring");
     }
 }
