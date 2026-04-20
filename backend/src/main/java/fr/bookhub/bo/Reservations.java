@@ -15,9 +15,7 @@ public class Reservations {
     @Column(name = "reservation_id")
     private  int id;
 
-
     private int userId;       // id_utilisateur
-
 
     private int bookId;       // id_livre
 

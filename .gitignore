@@ -1,0 +1,102 @@
+# 🚫 Git Ignore - BookHub Project
+
+# ========================================
+# BACKEND (Spring Boot / Gradle)
+# ========================================
+backend/target/
+backend/build/
+backend/.gradle/
+backend/bin/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.DS_Store
+backend/*.jar
+backend/*.war
+backend/*.nar
+backend/*.ear
+backend/*.zip
+backend/*.tar.gz
+backend/*.rar
+
+# IDE - IntelliJ
+backend/.idea/
+backend/out/
+backend/*.iml
+backend/*.iws
+backend/*.ipr
+
+# Logs
+backend/logs/
+backend/*.log
+
+# ========================================
+# FRONTEND (Angular)
+# ========================================
+frontend/app/node_modules/
+frontend/app/dist/
+frontend/app/.angular/
+frontend/app/angular.json
+frontend/app/package-lock.json
+frontend/app/npm-debug.log*
+frontend/app/yarn-debug.log*
+frontend/app/yarn-error.log*
+
+# IDE - VS Code
+frontend/app/.vscode/
+frontend/app/.code-workspace
+frontend/app/*.swp
+frontend/app/*.swo
+
+# IDE - WebStorm/IntelliJ
+frontend/app/.idea/
+frontend/app/out/
+
+# OS
+frontend/app/.DS_Store
+frontend/app/Thumbs.db
+
+# ========================================
+# ROOT LEVEL
+# ========================================
+.git/
+.idea/
+.DS_Store
+.env
+.env.local
+.env.*.local
+*.iml
+*.swp
+*.swo
+*~
+.vscode/
+.code-workspace
+Thumbs.db
+
+# Temp files
+*.bak
+*.tmp
+*.temp
+*.swp
+
+# ========================================
+# PROJECT SPECIFIC
+# ========================================
+demo.zip
+*.zip
+.gradle/wrapper/gradle-wrapper.jar
+
+# IDEs
+*.iml
+.idea/
+.vscode/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Runtime
+*.log
+*.pid
+*.class
