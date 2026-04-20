@@ -1,0 +1,37 @@
+<div class="create-container">
+
+  <h2>Ajouter un livre</h2>
+
+  <form [formGroup]="bookForm" (ngSubmit)="submit()">
+
+    <label>Titre</label>
+    <input type="text" formControlName="title">
+
+    <label>Auteur</label>
+    <input type="text" formControlName="author">
+
+    <label>ISBN</label>
+    <input type="text" formControlName="isbn">
+
+    <label>Description</label>
+    <textarea formControlName="description"></textarea>
+
+    <label>URL couverture</label>
+    <input type="text" formControlName="coverImage">
+
+    <label>Copies totales</label>
+    <input type="number" formControlName="totalCopies">
+
+    <label>Copies disponibles</label>
+    <input type="number" formControlName="availableCopies">
+
+    <label>ID catégorie</label>
+    <input type="number" formControlName="categoryId">
+
+    <button type="submit">
+      Ajouter le livre
+    </button>
+
+  </form>
+
+</div>
