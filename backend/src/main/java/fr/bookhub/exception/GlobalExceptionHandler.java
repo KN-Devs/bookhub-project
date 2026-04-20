@@ -25,7 +25,7 @@ public class GlobalExceptionHandler extends RuntimeException {
     public ResponseEntity<Map<String, String>> handleLimit(LoansLimitExceededException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("erreur", ex.getMessage()));
-        }
+    }
     @ExceptionHandler(BookNotFoundException.class)
     public ResponseEntity<String> handleNotFound(BookNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -41,7 +41,8 @@ public class GlobalExceptionHandler extends RuntimeException {
     public ResponseEntity<Map<String, String>> handleGeneric(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("erreur", "Erreur interne : " + ex.getMessage()));
-        }
+    }
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<String> handleBadRequest(BadRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());

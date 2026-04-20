@@ -2,11 +2,13 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Book} from '../../Interface/book';
 import {BookService} from '../../services/book-service';
 import {RouterLink} from '@angular/router';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-all-books-view',
   imports: [
-    RouterLink
+    RouterLink,
+    FormsModule
   ],
   templateUrl: './all-books-view.html',
   styleUrl: './all-books-view.css',
@@ -14,6 +16,9 @@ import {RouterLink} from '@angular/router';
 export class AllBooksView implements OnInit {
 
   public books : Book[] = [];
+  searchText = '';
+  categoryId: number | null = null;
+  available: boolean | null = null;
 
 
   constructor(private bookService : BookService, private cdr : ChangeDetectorRef) {
@@ -42,4 +47,7 @@ export class AllBooksView implements OnInit {
     console.log("Réservation :", book.title);
   }
 
+  protected search() {
+
+  }
 }
