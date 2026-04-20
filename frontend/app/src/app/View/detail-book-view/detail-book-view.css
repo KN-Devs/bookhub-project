@@ -1,0 +1,137 @@
+.book-detail {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #222;
+  background-color: #f9f9f9;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+}
+
+.book-header {
+  display: flex;
+  gap: 30px;
+  flex-direction: row;
+
+  align-items: flex-start;
+}
+
+.cover img {
+  width: 220px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.info h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.author {
+  margin-top: 10px;
+  color: #555;
+}
+
+.isbn {
+  margin-top: 5px;
+  font-size: 13px;
+  color: #777;
+}
+
+.status {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.status_ok {
+  color: #1f9d55;
+  font-weight: 600;
+  padding: 4px 10px;
+  display: inline-block;
+  background: #eafaf1;
+  border: 1px solid #b7ebc6;
+  border-radius: 6px;
+}
+
+.status_empty {
+  color: #c0392b;
+  font-weight: 600;
+  padding: 4px 10px;
+  display: inline-block;
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+}
+
+.category {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #eef2ff;
+  font-size: 12px;
+}
+
+.stock {
+  margin-top: 10px;
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 12px;
+}
+
+.badge.ok {
+  background: #2ecc71;
+}
+
+.badge.empty {
+  background: #e74c3c;
+}
+
+.rating {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.btn {
+  margin-top: 15px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #2980b9;
+}
+
+.btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* DESCRIPTION */
+.description {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.description h2 {
+  margin-bottom: 10px;
+}
