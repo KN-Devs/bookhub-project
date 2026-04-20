@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div class="loan-container">
+  <h2>Mes emprunts</h2>
+
+  <p class="succes" *ngIf="succes">{{ succes }}</p>
+  <p class="erreur" *ngIf="erreur">{{ erreur }}</p>
+
+  <p *ngIf="loans.length === 0">Vous n'avez aucun emprunt en cours.</p>
+
+  <div class="loan-card" *ngFor="let loan of loans">
+    <p><strong>Livre ID :</strong> {{ loan.bookId }}</p>
+    <p><strong>Emprunté le :</strong> {{ loan.loanDate | date:'dd/MM/yyyy' }}</p>
+    <p><strong>À rendre avant le :</strong> {{ loan.dueDate | date:'dd/MM/yyyy' }}</p>
+    <p><strong>Statut :</strong>
+      <span [class]="loan.status === 'ACTIVE' ? 'statut-actif' : loan.status === 'OVERDUE' ? 'statut-retard' : 'statut-retourne'">
+        {{ loan.status }}
+      </span>
+    </p>
+    <button
+      *ngIf="loan.status === 'ACTIVE' || loan.status === 'OVERDUE'"
+      (click)="retournerLivre(loan.id)">
+      Retourner le livre
+    </button>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div class="reservation-container">
+  <h2>Mes réservations</h2>
+
+  <p class="succes" *ngIf="succes">{{ succes }}</p>
+  <p class="erreur" *ngIf="erreur">{{ erreur }}</p>
+
+  <p *ngIf="reservations.length === 0">Vous n'avez aucune réservation en cours.</p>
+
+  <div class="reservation-card" *ngFor="let reservation of reservations">
+    <p><strong>Livre ID :</strong> {{ reservation.bookId }}</p>
+    <p><strong>Réservé le :</strong> {{ reservation.reservationDate | date:'dd/MM/yyyy' }}</p>
+    <p><strong>Position dans la file :</strong> {{ reservation.rankInLine }}</p>
+    <p><strong>Statut :</strong>
+      <span [class]="reservation.status === 'EN_ATTENTE' ? 'statut-attente' : 'statut-confirmee'">
+        {{ reservation.status }}
+      </span>
+    </p>
+    <button
+      *ngIf="reservation.status === 'EN_ATTENTE'"
+      (click)="annulerReservation(reservation.id)">
+      Annuler la réservation
+    </button>
+  </div>
+</div>
+</body>
+</html>

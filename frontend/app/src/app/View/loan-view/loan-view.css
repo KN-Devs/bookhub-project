@@ -1,0 +1,28 @@
+.loan-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.loan-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.statut-actif { color: green; font-weight: bold; }
+.statut-retard { color: red; font-weight: bold; }
+.statut-retourne { color: grey; }
+
+.succes { color: green; }
+.erreur { color: red; }
+
+button {
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
