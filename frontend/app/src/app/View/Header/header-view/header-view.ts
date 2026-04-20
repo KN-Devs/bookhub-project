@@ -17,4 +17,6 @@ export class HeaderView {
   protected logout() {
 
   }
+
+  protected readonly SearchView = SearchView;
 }

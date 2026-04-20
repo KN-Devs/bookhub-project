@@ -105,24 +105,24 @@
   font-weight: bold;
 }
 
-.btn {
-  margin-top: 15px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 10px;
-  background: #3498db;
+/* EMPRUNTER */
+.button_emprunt {
+  background: #2ecc71;
   color: white;
-  cursor: pointer;
-  transition: 0.2s;
 }
 
-.btn:hover {
-  background: #2980b9;
+.button_emprunt:hover {
+  background: #27ae60;
 }
 
-.btn:disabled {
-  background: #aaa;
-  cursor: not-allowed;
+/* RÉSERVER */
+.button_reserve {
+  background: #e67e22;
+  color: white;
+}
+
+.button_reserve:hover {
+  background: #d35400;
 }
 
 /* DESCRIPTION */
