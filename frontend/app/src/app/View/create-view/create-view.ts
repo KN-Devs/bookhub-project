@@ -8,7 +8,6 @@ import {Router} from '@angular/router';
   selector: 'app-create-view',
   imports: [
     FormsModule,
-    NgIf,
     ReactiveFormsModule
   ],
   templateUrl: './create-view.html',
