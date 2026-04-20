@@ -28,4 +28,11 @@ export class DetailBookView implements OnInit {
 
   }
 
+  protected emprunter(book: Book) {
+    
+  }
+
+  protected reserver(book: Book) {
+    
+  }
 }
