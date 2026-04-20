@@ -26,6 +26,8 @@ public class AuthController {
             AuthResponse response = authService.register(registerRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (RuntimeException e) {
+            System.out.println("ERREUR REGISTER : " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
@@ -36,6 +38,8 @@ public class AuthController {
             AuthResponse response = authService.login(loginRequest);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
+            System.out.println("ERREUR LOGIN : " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
