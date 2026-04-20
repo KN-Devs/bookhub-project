@@ -47,9 +47,9 @@ export class BookService {
   }
 
 
-  updateBook(id: number, requestBody: Book) {
-    if (!id) {
-      throw new Error('ID obligatoire');
+  updateBook(isbn: String, requestBody: Book) {
+    if (!isbn) {
+      throw new Error('ISBN obligatoire');
     }
     if (requestBody.title !== undefined && requestBody.title.trim() === '') {
       throw new Error('Titre invalide');
@@ -64,7 +64,7 @@ export class BookService {
     ) {
       throw new Error('Incohérence des copies');
     }
-    return this.http.put<Book>(`http://localhost:8080/api/books/${id}`, requestBody);
+    return this.http.put<Book>(`http://localhost:8080/api/books/${isbn}`, requestBody);
   }
 
 
