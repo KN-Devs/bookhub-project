@@ -6,6 +6,7 @@ import {BookService} from '../../services/book-service';
 @Component({
   selector: 'app-detail-book-view',
   imports: [
+    RouterLink
   ],
   templateUrl: './detail-book-view.html',
   styleUrl: './detail-book-view.css',
@@ -28,4 +29,11 @@ export class DetailBookView implements OnInit {
 
   }
 
+  protected emprunter(book: Book) {
+
+  }
+
+  protected reserver(book: Book) {
+
+  }
 }
