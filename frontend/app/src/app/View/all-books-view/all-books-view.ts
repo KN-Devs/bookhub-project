@@ -34,8 +34,12 @@ export class AllBooksView implements OnInit {
   }
 
 
-  protected reserver(book: Book) {
+  emprunter(book: Book) {
+    console.log("Emprunt :", book.title);
+  }
 
+  reserver(book: Book) {
+    console.log("Réservation :", book.title);
   }
 
 }
