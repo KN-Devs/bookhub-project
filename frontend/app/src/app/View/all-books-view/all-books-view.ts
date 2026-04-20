@@ -69,6 +69,16 @@ export class AllBooksView implements OnInit {
         book => book.availableCopies === 0
       );
     }
+
+    const query = this.searchText.toLowerCase().trim();
+    if (query.length > 0) {
+      this.booksAffichage = this.booksAffichage.filter(book =>
+        book.title.toLowerCase().includes(query) ||
+        book.author.toLowerCase().includes(query) ||
+        book.isbn.toLowerCase().includes(query)
+      );
+    }
+
     this.cdr.detectChanges();
   }
 }

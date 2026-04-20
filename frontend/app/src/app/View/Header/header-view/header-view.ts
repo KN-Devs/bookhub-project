@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {SearchView} from '../search-view/search-view';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
+import {AuthService} from '../../../services/auth-service';
 
 @Component({
   selector: 'app-header-view',
@@ -14,8 +15,14 @@ import {RouterLink} from '@angular/router';
 export class HeaderView {
 
 
-  protected logout() {
+  constructor(private authService : AuthService, private router : Router) {
 
+  }
+
+
+  protected logout() {
+    this.authService.logout();
+    this.router.navigate(['/connection']);
   }
 
   protected readonly SearchView = SearchView;
