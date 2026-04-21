@@ -16,8 +16,10 @@ import {FormsModule} from '@angular/forms';
 export class AllBooksView implements OnInit {
 
   public books : Book[] = [];
+  public booksAffichage : Book[] = [];
+
   searchText = '';
-  categoryId: number | null = null;
+  categoryId: number = 0;
   available: boolean | null = null;
 
 
@@ -28,6 +30,7 @@ export class AllBooksView implements OnInit {
     this.bookService.getAllBooks().subscribe({
       next: (data) => {
         this.books = data;
+        this.booksAffichage = data;
         this.cdr.detectChanges();
         console.log("les data:", data);
         console.log("Livres chargées:", this.books);
@@ -48,6 +51,34 @@ export class AllBooksView implements OnInit {
   }
 
   protected search() {
+    this.booksAffichage = this.books;
+    // filtre catégorie
+    if (this.categoryId >0) {
+      this.booksAffichage = this.booksAffichage.filter(
+        book => book.category?.id === this.categoryId
+      );
+    }
+    // filtre disponibilité
+    if (this.available === true) {
+      this.booksAffichage = this.booksAffichage.filter(
+        book => book.availableCopies > 0
+      );
+    }
+    if (this.available === false) {
+      this.booksAffichage = this.booksAffichage.filter(
+        book => book.availableCopies === 0
+      );
+    }
 
+    const query = this.searchText.toLowerCase().trim();
+    if (query.length > 0) {
+      this.booksAffichage = this.booksAffichage.filter(book =>
+        book.title.toLowerCase().includes(query) ||
+        book.author.toLowerCase().includes(query) ||
+        book.isbn.toLowerCase().includes(query)
+      );
+    }
+
+    this.cdr.detectChanges();
   }
 }
