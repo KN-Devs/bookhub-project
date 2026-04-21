@@ -24,7 +24,7 @@ export class LoanService {
   }
 
   getLoansByUser(userId: number) {
-    return this.http.get<LoanResponse[]>(`${this.apiUrl}/user/${userId}`);
+    return this.http.get<LoanResponse[]>(`${this.apiUrl}/my`);
   }
 
   getLoansByStatus(status: string) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoanService } from '../../services/loan.service';
 import { AuthService } from '../../services/auth-service';
@@ -20,7 +20,8 @@ export class LoanView implements OnInit {
 
   constructor(
     private loanService: LoanService,
-    private authService: AuthService
+    private authService: AuthService,
+  private cdr : ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -31,7 +32,10 @@ export class LoanView implements OnInit {
 
   chargerEmprunts() {
     this.loanService.getLoansByUser(this.userId).subscribe({
-      next: (data) => this.loans = data,
+      next: (data) => {
+        this.loans = data;
+          this.cdr.detectChanges();
+      },
       error: () => this.erreur = 'Impossible de charger vos emprunts.'
     });
   }

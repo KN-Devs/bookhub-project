@@ -13,4 +13,6 @@ public interface LoansService {
     List<LoansResponseDTO> getLoansByStatus(String status);
     LoansResponseDTO returnBook(int id);
     void deleteLoan(int id);
+
+   ;
 }

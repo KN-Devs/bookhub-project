@@ -9,11 +9,21 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: JwtInterceptor,
-      multi: true
-    }
+    provideHttpClient(
+      withInterceptors([
+        (req, next) => {
+          const token = localStorage.getItem('token');
+          console.log("TOKEN SENT =", token);
+          if (token) {
+            req = req.clone({
+              setHeaders: {
+                Authorization: `Bearer ${token}`
+              }
+            });
+          }
+          return next(req);
+        }
+      ])
+    )
   ]
 };
