@@ -13,27 +13,56 @@ import {BookService} from '../../services/book-service';
 })
 export class DetailBookView implements OnInit {
 
-  constructor(private route: ActivatedRoute, private bookService: BookService, private cdr : ChangeDetectorRef) {
-  }
-
   isbn: string = "";
   book!: Book;
+  protected activeLoansCount: number = 0;
+
+  constructor(
+    private route: ActivatedRoute,
+    private bookService: BookService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.isbn = this.route.snapshot.paramMap.get('isbn')!;
+    this.loadBook();
+    this.loadActiveLoansCount();
+  }
+
+  private loadBook(): void {
     this.bookService.getBookByIsbn(this.isbn).subscribe(data => {
-      this.book = data
-      this.cdr.detectChanges()
-      console.log(this.book)
+      this.book = data;
+      this.cdr.detectChanges();
     });
-
   }
 
-  protected emprunter(book: Book) {
-
+  private loadActiveLoansCount(): void {
+    this.bookService.getActiveLoansCount().subscribe({
+      next: (count) => {
+        this.activeLoansCount = count;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error(err)
+    });
   }
 
-  protected reserver(book: Book) {
+  protected emprunter(book: Book): void {
+    this.bookService.borrowBook(book.isbn).subscribe({
+      next: () => {
+        this.loadBook();
+        this.loadActiveLoansCount();
+      },
+      error: (err) => console.error(err)
+    });
+  }
 
+  protected reserver(book: Book): void {
+    this.bookService.reserveBook(book.isbn).subscribe({
+      next: () => {
+        this.loadBook();
+        this.loadActiveLoansCount();
+      },
+      error: (err) => console.error(err)
+    });
   }
 }

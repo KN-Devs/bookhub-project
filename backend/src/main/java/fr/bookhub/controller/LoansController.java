@@ -1,10 +1,13 @@
 package fr.bookhub.controller;
 
+import fr.bookhub.bo.User;
+import fr.bookhub.dal.LoansRepository;
 import fr.bookhub.dto.LoansRequestDTO;
 import fr.bookhub.dto.LoansResponseDTO;
 import fr.bookhub.service.LoansService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +17,11 @@ import java.util.List;
 public class LoansController {
 
     private final LoansService loansService;
+    private final LoansRepository loansRepository;
 
-    public LoansController(LoansService loansService) {
+    public LoansController(LoansService loansService, LoansRepository loansRepository) {
         this.loansService = loansService;
+        this.loansRepository = loansRepository;
     }
 
     // POST /api/loans — Créer un emprunt
@@ -36,9 +41,16 @@ public class LoansController {
     // GET /api/loans/my — Mes emprunts (utilisateur connecté)
     @GetMapping("/my")
     public ResponseEntity<List<LoansResponseDTO>> getMyLoans(
-            @RequestParam int userId) {
-        // 🔔 userId sera extrait du JWT plus tard avec Spring Security
-        return ResponseEntity.ok(loansService.getLoansByUser(userId));
+            @AuthenticationPrincipal User currentUser) {
+        return ResponseEntity.ok(loansService.getLoansByUser(currentUser.getId()));
+    }
+
+    // GET /api/loans/my/active — Nombre d'emprunts actifs de l'user connecté
+    @GetMapping("/my/active")
+    public ResponseEntity<Long> getMyActiveLoansCount(
+            @AuthenticationPrincipal User currentUser) {
+        long count = loansRepository.countByUserIdAndStatus(currentUser.getId(), "ACTIVE");
+        return ResponseEntity.ok(count);
     }
 
     // GET /api/loans/{id} — Un emprunt par ID
@@ -55,7 +67,7 @@ public class LoansController {
         return ResponseEntity.ok(loansService.getLoansByStatus(status));
     }
 
-    // PUT /api/loans/{id}/return — Retourner un livre (LIBRARIAN)
+    // PUT /api/loans/{id}/return — Retourner un livre
     @PutMapping("/{id}/return")
     public ResponseEntity<LoansResponseDTO> returnBook(
             @PathVariable int id) {
