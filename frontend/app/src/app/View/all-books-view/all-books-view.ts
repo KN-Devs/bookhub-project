@@ -3,6 +3,9 @@ import {Book} from '../../Interface/book';
 import {BookService} from '../../services/book-service';
 import {RouterLink} from '@angular/router';
 import {FormsModule} from '@angular/forms';
+import {AuthService} from '../../services/auth-service';
+import {LoanResponse} from '../../Interface/loan';
+import {LoanService} from '../../services/loan.service';
 
 @Component({
   selector: 'app-all-books-view',
@@ -18,15 +21,28 @@ export class AllBooksView implements OnInit {
   public books : Book[] = [];
   public booksAffichage : Book[] = [];
 
+  userId: number = 0;
+
   searchText = '';
   categoryId: number = 0;
   available: boolean | null = null;
+  loans: LoanResponse[] = [];
 
 
-  constructor(private bookService : BookService, private cdr : ChangeDetectorRef) {
+  constructor(private bookService : BookService,
+              private cdr : ChangeDetectorRef,
+              private authService: AuthService,
+              private loanService: LoanService,) {
   }
 
   ngOnInit(): void {
+    const user = this.authService.getCurrentUser();
+    this.userId = user?.userId;
+    this.chargerEmprunts();
+    this.chargerLivre();
+  }
+
+  chargerLivre(){
     this.bookService.getAllBooks().subscribe({
       next: (data) => {
         this.books = data;
@@ -42,8 +58,35 @@ export class AllBooksView implements OnInit {
   }
 
 
+  chargerEmprunts() {
+    this.loanService.getLoansByUser(this.userId).subscribe({
+      next: (data) => {
+        this.loans = data;
+        this.cdr.detectChanges();
+        console.log("emprunts :", this.loans);
+      },
+    });
+  }
+
+  isBorrowed(bookId: number): boolean {
+    return this.loans?.some(loan => loan.bookId === bookId);
+  }
+
+
   emprunter(book: Book) {
-    console.log("Emprunt :", book.title);
+    const loan = {
+      userId: this.userId!,
+      bookId: book.id!
+    };
+    this.loanService.createLoan(loan).subscribe({
+      next: (res) => {
+        console.log("Emprunt réussi :", res);
+        this.chargerEmprunts();
+      },
+      error: (err) => {
+        console.error("Erreur emprunt :", err);
+      }
+    });
   }
 
   reserver(book: Book) {

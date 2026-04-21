@@ -56,7 +56,12 @@
               Détail
             </button>
           </div>
-          @if ((book.availableCopies>0)) {
+
+          @if (isBorrowed(book.id!)) {
+            <button class="button_emprunter" disabled>
+              Livre déjà emprunté
+            </button>
+          } @else if (book.availableCopies > 0) {
             <button class="button_emprunt" (click)="emprunter(book)">
               Emprunter
             </button>
@@ -65,7 +70,6 @@
               Réserver
             </button>
           }
-
 
         </div>
       }
