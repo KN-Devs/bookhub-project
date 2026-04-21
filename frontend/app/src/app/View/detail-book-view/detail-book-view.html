@@ -28,7 +28,8 @@
         <p class="stock">
           {{ book.availableCopies }} / {{ book.totalCopies }} disponibles
         </p>
-        @if ((book.availableCopies>0)) {
+
+        @if (book.availableCopies > 0) {
           <p class="status_ok">Disponible</p>
         } @else {
           <p class="status_empty">Indisponible</p>
@@ -39,15 +40,23 @@
             {{ book.averageRating }} / 5
           </p>
         }
-        @if ((book.availableCopies>0)) {
-          <button class="button_emprunt" (click)="emprunter(book)">
-            Emprunter
-          </button>
+
+        @if (activeLoansCount < 3) {
+          @if (book.availableCopies > 0) {
+            <button class="button_emprunt" (click)="emprunter(book)">
+              Emprunter
+            </button>
+          } @else {
+            <button class="button_reserve" (click)="reserver(book)">
+              Réserver
+            </button>
+          }
         } @else {
-          <button class="button_reserve" (click)="reserver(book)">
-            Réserver
-          </button>
+          <p class="loan-limit-warning">
+            Vous avez atteint la limite de 3 emprunts simultanés.
+          </p>
         }
+
         <button class="button_update" [routerLink]="['/viewBooks/update', book.isbn]">
           Mise a jour
         </button>

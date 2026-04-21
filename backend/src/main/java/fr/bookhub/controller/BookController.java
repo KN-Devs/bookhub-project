@@ -1,10 +1,12 @@
 package fr.bookhub.controller;
 
+import fr.bookhub.bo.User;
 import fr.bookhub.dto.BookRequest;
 import fr.bookhub.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import fr.bookhub.bo.Book;
 import fr.bookhub.dal.BooksRepository;
@@ -56,6 +58,22 @@ public class BookController {
 
         Book updated = bookService.updateBook(isbn, dto);
         return ResponseEntity.ok(updated);
+    }
+
+    @PostMapping("/{isbn}/borrow")
+    public ResponseEntity<?> borrowBook(
+            @PathVariable String isbn,
+            @AuthenticationPrincipal User currentUser) {
+        bookService.borrowBook(isbn, currentUser.getId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{isbn}/reserve")
+    public ResponseEntity<?> reserveBook(
+            @PathVariable String isbn,
+            @AuthenticationPrincipal User currentUser) {
+        bookService.reserveBook(isbn, currentUser.getId());
+        return ResponseEntity.ok().build();
     }
 
 }
