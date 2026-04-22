@@ -90,7 +90,7 @@ export class AllBooksView implements OnInit {
 
   protected isReserved(bookId: number) {
     return this.reservations?.some(
-      reservations => reservations.bookId === bookId && reservations.status === 'ACTIVE'
+      reservations => reservations.bookId === bookId && reservations.status === 'EN_ATTENTE'
     ) ?? false;
   }
 

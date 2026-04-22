@@ -24,7 +24,7 @@
       </span>
     </p>
     <button
-      *ngIf="reservation.status === 'ACTIVE'"
+      *ngIf="reservation.status === 'EN_ATTENTE'"
       (click)="annulerReservation(reservation.id)">
       Annuler la réservation
     </button>

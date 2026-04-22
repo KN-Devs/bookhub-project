@@ -48,7 +48,7 @@ public class ReservationsServiceImpl implements ReservationService{
         Reservations reservations = new Reservations();
         reservations.setReservationDate(new Date());
         reservations.setBookId(dto.getBookId());
-        reservations.setStatus("ACTIVE");
+        reservations.setStatus("EN_ATTENTE");
         reservations.setUserId(dto.getUserId());
         reservations.setRankInLine(1);
 
