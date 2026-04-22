@@ -69,7 +69,9 @@ export class AllBooksView implements OnInit {
   }
 
   isBorrowed(bookId: number): boolean {
-    return this.loans?.some(loan => loan.bookId === bookId);
+    return this.loans?.some(
+      loan => loan.bookId === bookId && loan.status === 'ACTIVE'
+    ) ?? false;
   }
 
 

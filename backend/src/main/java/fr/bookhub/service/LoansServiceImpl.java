@@ -1,5 +1,6 @@
 package fr.bookhub.service;
 
+import fr.bookhub.bo.Book;
 import fr.bookhub.bo.Loans;
 import fr.bookhub.dal.BooksRepository;
 import fr.bookhub.dal.LoansRepository;
@@ -65,6 +66,18 @@ public class LoansServiceImpl implements LoansService {
             throw new BookAlreadyBorrowedException(dto.getBookId());
         }
 
+        Book book = bookRepository.findById(dto.getBookId());
+        if (book == null) {
+            throw new BookNotFoundException("livre non trouvé");
+        }
+
+        if (book.getAvailableCopies() <= 0) {
+            throw new BookAlreadyBorrowedException(dto.getBookId());
+        }
+        // réduire stock
+        book.setAvailableCopies(book.getAvailableCopies() - 1);
+        bookRepository.save(book);
+
         // RG-LOAN-02 : durée fixe = 14 jours
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, 14);
@@ -113,6 +126,15 @@ public class LoansServiceImpl implements LoansService {
         Date now = new Date();
         loan.setReturnDate(now);
         loan.setStatus(now.after(loan.getDueDate()) ? "OVERDUE" : "RETURNED");
+
+        // récupérer le livre
+        Book book = bookRepository.findById(loan.getBookId());
+        if (book == null) {
+            throw new BookNotFoundException("livre non trouvé");
+        }
+        // remettre en stock
+        book.setAvailableCopies(book.getAvailableCopies() + 1);
+        bookRepository.save(book);
 
         return toDTO(loansRepository.save(loan));
     }

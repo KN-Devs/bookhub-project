@@ -32,7 +32,7 @@ export class LoanService {
   }
 
   returnBook(id: number) {
-    return this.http.patch<LoanResponse>(`${this.apiUrl}/${id}/return`, {});
+    return this.http.put<LoanResponse>(`${this.apiUrl}/${id}/return`, {});
   }
 
   deleteLoan(id: number) {

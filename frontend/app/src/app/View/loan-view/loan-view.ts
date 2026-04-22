@@ -38,11 +38,24 @@ export class LoanView implements OnInit {
     this.loanService.getLoansByUser(this.userId).subscribe({
       next: (data) => {
         this.loans = data;
+        this.trierLoans();
         this.cdr.detectChanges();
       },
       error: () => this.erreur = 'Impossible de charger vos emprunts.'
     });
   }
+
+  trierLoans(): void {
+    this.loans.sort((a, b) => {
+      const ordre: any = {
+        'OVERDUE': 1,
+        'ACTIVE': 2,
+        'RETURNED': 3
+      };
+      return ordre[a.status] - ordre[b.status];
+    });
+  }
+
 
   retournerLivre(id: number) {
     this.loanService.returnBook(id).subscribe({
