@@ -1,24 +1,31 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Book} from '../Interface/book';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookService {
+  // CORRECTION : Initialisation de l'URL de base du backend
+  private apiUrl = 'http://localhost:8080/api/books';
 
   constructor(private http: HttpClient) {
   }
 
-  getAllBooks() {
-    return this.http.get<Book[]>('http://localhost:8080/api/books');
+  getAllBooks(): Observable<Book[]> {
+    return this.http.get<Book[]>(this.apiUrl);
   };
 
-  getBookByIsbn(isbn: string) {
-    return this.http.get<Book>('http://localhost:8080/api/books/' + isbn);
+  getBookByIsbn(isbn: string): Observable<Book> {
+    return this.http.get<Book>(`${this.apiUrl}/isbn/${isbn}`);
   }
 
-  createBook(requestBody: Book) {
+  getBookById(id: number): Observable<Book> {
+    return this.http.get<Book>(`${this.apiUrl}/id/${id}`);
+  }
+
+  createBook(requestBody: Book): Observable<Book> {
     // Vérifications front
     if (!requestBody.title || requestBody.title.trim() === '') {
       throw new Error('Le titre est obligatoire');
@@ -42,12 +49,12 @@ export class BookService {
     ) {
       throw new Error('Copies disponibles > copies totales interdit');
     }
-    // appel API
-    return this.http.post<Book>('http://localhost:8080/api/books', requestBody);
+
+    // Appel API avec l'URL centralisée
+    return this.http.post<Book>(this.apiUrl, requestBody);
   }
 
-
-  updateBook(isbn: String, requestBody: Book) {
+  updateBook(isbn: string, requestBody: Book): Observable<Book> {
     if (!isbn) {
       throw new Error('ISBN obligatoire');
     }
@@ -64,8 +71,6 @@ export class BookService {
     ) {
       throw new Error('Incohérence des copies');
     }
-    return this.http.put<Book>(`http://localhost:8080/api/books/${isbn}`, requestBody);
+    return this.http.put<Book>(`${this.apiUrl}/${isbn}`, requestBody);
   }
-
-
 }

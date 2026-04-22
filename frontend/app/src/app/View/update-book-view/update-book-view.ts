@@ -1,14 +1,16 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {BookService} from '../../services/book-service';
-import {Book} from '../../Interface/book';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BookService } from '../../services/book-service';
+import { Book } from '../../Interface/book';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgIf } from '@angular/common'; // ← ajoute ça
 
 @Component({
   selector: 'app-update-book-view',
   imports: [
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIf  // ← ajoute ça
   ],
   templateUrl: './update-book-view.html',
   styleUrl: './update-book-view.css',
@@ -17,12 +19,12 @@ export class UpdateBookView implements OnInit {
 
   bookForm: FormGroup;
   isbn: string = "";
-  book!: Book;
+  book: Book | undefined = undefined; // ← undefined au lieu de book!
 
   constructor(
     private route: ActivatedRoute,
     private bookService: BookService,
-    private cdr : ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
     private router: Router
   ) {
@@ -38,12 +40,10 @@ export class UpdateBookView implements OnInit {
     });
   }
 
-
   ngOnInit(): void {
     this.isbn = this.route.snapshot.paramMap.get('isbn')!;
     this.bookService.getBookByIsbn(this.isbn).subscribe(data => {
-      this.book = data
-      this.cdr.detectChanges()
+      this.book = data;
       this.bookForm.patchValue({
         title: data.title,
         author: data.author,
@@ -54,8 +54,8 @@ export class UpdateBookView implements OnInit {
         availableCopies: data.availableCopies,
         categoryId: data.category?.id
       });
+      this.cdr.detectChanges();
     });
-
   }
 
   submit() {
@@ -64,7 +64,7 @@ export class UpdateBookView implements OnInit {
       return;
     }
 
-    this.bookService.updateBook(this.book.isbn, this.bookForm.value).subscribe({
+    this.bookService.updateBook(this.book!.isbn, this.bookForm.value).subscribe({
       next: () => {
         alert('Livre modifié avec succès 👍');
         this.router.navigate(['/viewBooks']);
@@ -75,7 +75,4 @@ export class UpdateBookView implements OnInit {
       }
     });
   }
-
-
-
 }

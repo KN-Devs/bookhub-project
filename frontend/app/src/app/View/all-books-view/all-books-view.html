@@ -36,37 +36,48 @@
 
     <div class="books-grid">
       @for (book of booksAffichage; track book.isbn) {
-        <div class="book-card" >
+        <div class="book-card">
           <h3>{{ book.title }}</h3>
+
+          <!-- ⭐ étoiles via composant -->
+          <div class="book-rating">
+            <app-star-rating-view
+              [currentRating]="book.averageRating ?? 0"
+              [readonly]="true" />
+            @if ((book.reviewCount ?? 0) > 0) {
+              <span class="rating-label">
+                {{ book.averageRating | number:'1.1-1' }}/5 ({{ book.reviewCount }} avis)
+              </span>
+            } @else {
+              <span class="rating-label no-rating">Pas encore noté</span>
+            }
+          </div>
+
           <img
             class="cover"
             [src]="'https://covers.openlibrary.org/b/isbn/' + book.isbn + '-M.jpg'"
             alt="cover"
           />
           <div class="info">
-
             <p class="author">{{ book.author }}</p>
             <span
               class="badge"
-              [class.available]="(book.availableCopies>0)"
-              [class.unavailable]="(book.availableCopies<=0)">
-              {{ (book.availableCopies>0) ? 'Disponible' : 'Indisponible' }}
+              [class.available]="(book.availableCopies > 0)"
+              [class.unavailable]="(book.availableCopies <= 0)">
+              {{ (book.availableCopies > 0) ? 'Disponible' : 'Indisponible' }}
             </span>
             <button class="button_detail" [routerLink]="['/viewBooks/detail', book.isbn]">
               Détail
             </button>
           </div>
-          @if ((book.availableCopies>0)) {
-            <button class="button_emprunt" (click)="emprunter(book)">
-              Emprunter
-            </button>
-          } @else {
-            <button class="button_reserve" (click)="reserver(book)">
-              Réserver
-            </button>
-          }
 
-
+          <div class="info">
+            @if (book.availableCopies > 0) {
+              <button class="button_emprunt" (click)="emprunter(book)">Emprunter</button>
+            } @else {
+              <button class="button_reserve" (click)="reserver(book)">Réserver</button>
+            }
+          </div>
         </div>
       }
     </div>

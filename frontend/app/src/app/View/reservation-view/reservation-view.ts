@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReservationService } from '../../services/reservation.service';
+import { ReservationService } from '../../services/reservation-service';
 import { AuthService } from '../../services/auth-service';
 import { ReservationResponse } from '../../Interface/reservation';
 

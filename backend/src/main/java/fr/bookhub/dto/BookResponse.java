@@ -1,17 +1,22 @@
 package fr.bookhub.dto;
 
-public class BookRequest {
+public class BookResponse {
 
+    private Integer id;
     private String title;
     private String author;
     private String isbn;
     private String description;
     private String coverImage;
     private boolean available;
-    private Integer totalCopies;
-    private Integer availableCopies;
+    private int totalCopies;
+    private int availableCopies;
     private Double averageRating;
-    private Integer categoryId;
+    private Integer reviewCount;
+    private String categoryName;
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -31,15 +36,18 @@ public class BookRequest {
     public boolean isAvailable() { return available; }
     public void setAvailable(boolean available) { this.available = available; }
 
-    public Integer getTotalCopies() { return totalCopies; }
-    public void setTotalCopies(Integer totalCopies) { this.totalCopies = totalCopies; }
+    public int getTotalCopies() { return totalCopies; }
+    public void setTotalCopies(int totalCopies) { this.totalCopies = totalCopies; }
 
-    public Integer getAvailableCopies() { return availableCopies; }
-    public void setAvailableCopies(Integer availableCopies) { this.availableCopies = availableCopies; }
+    public int getAvailableCopies() { return availableCopies; }
+    public void setAvailableCopies(int availableCopies) { this.availableCopies = availableCopies; }
 
     public Double getAverageRating() { return averageRating; }
     public void setAverageRating(Double averageRating) { this.averageRating = averageRating; }
 
-    public Integer getCategoryId() { return categoryId; }
-    public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
+    public Integer getReviewCount() { return reviewCount; }
+    public void setReviewCount(Integer reviewCount) { this.reviewCount = reviewCount; }
+
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
 }

@@ -68,4 +68,11 @@ public class LoansController {
         loansService.deleteLoan(id);
         return ResponseEntity.noContent().build();
     }
+
+    // GET /api/loans/user/{userId}
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<LoansResponseDTO>> getLoansByUser(
+            @PathVariable int userId) {
+        return ResponseEntity.ok(loansService.getLoansByUser(userId));
+    }
 }

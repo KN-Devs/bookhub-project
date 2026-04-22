@@ -1,9 +1,14 @@
+
+@if (showThankYouPopup) {
+  <div class="thank-you-popup">
+    Merci pour ton retour sur <strong>{{ book.title }}</strong> !
+  </div>
+}
+
 <div class="book-detail">
 
   @if (!book) {
-    <div class="loading">
-      Chargement du livre...
-    </div>
+    <div class="loading">Chargement du livre...</div>
   } @else {
 
     <div class="book-header">
@@ -16,52 +21,98 @@
 
       <div class="info">
         <h1>{{ book.title }}</h1>
-        <p class="author"> {{ book.author }}</p>
+        <p class="author">{{ book.author }}</p>
         <p class="isbn">ISBN : {{ book.isbn }}</p>
 
         @if (book.category) {
-          <span class="category">
-           Catégorie : {{ book.category.name }}
-          </span>
+          <span class="category">Catégorie : {{ book.category.name }}</span>
         }
 
-        <p class="stock">
-          {{ book.availableCopies }} / {{ book.totalCopies }} disponibles
-        </p>
-        @if ((book.availableCopies>0)) {
+        <p class="stock">{{ book.availableCopies }} / {{ book.totalCopies }} disponibles</p>
+
+        @if (book.availableCopies > 0) {
           <p class="status_ok">Disponible</p>
         } @else {
           <p class="status_empty">Indisponible</p>
         }
-
-        @if (book.averageRating !== undefined) {
-          <p class="rating">
-            {{ book.averageRating }} / 5
-          </p>
-        }
-        @if ((book.availableCopies>0)) {
-          <button class="button_emprunt" (click)="emprunter(book)">
-            Emprunter
-          </button>
+        @if ((book.availableCopies > 0)) {
+          <button class="button_emprunt" (click)="emprunter(book)">Emprunter</button>
         } @else {
-          <button class="button_reserve" (click)="reserver(book)">
-            Réserver
-          </button>
+          <button class="button_reserve" (click)="reserver(book)">Réserver</button>
         }
-        <button class="button_update" [routerLink]="['/viewBooks/update', book.isbn]">
-          Mise a jour
-        </button>
+        <div class="book-rating">
+          <app-star-rating-view
+            [currentRating]="book.averageRating ?? 0"
+            [readonly]="true" />
+          @if ((book.reviewCount ?? 0) > 0) {
+            <span class="rating-label">
+              {{ book.averageRating | number:'1.1-1' }}/5 ({{ book.reviewCount }} avis)
+            </span>
+          } @else {
+            <span class="rating-label no-rating">Pas encore noté</span>
+          }
+        </div>
 
+        <div class="info">
+          <h1>{{ book.title }}</h1>
+          @if (book.availableCopies > 0) {
+            <button class="button_emprunt" (click)="emprunter(book)">Emprunter</button>
+          } @else {
+            <button class="button_reserve" (click)="reserver(book)">Réserver</button>
+          }
+
+
+            <button class="button_update" [routerLink]="['/viewBooks/update', book.isbn]">
+              Mise à jour
+            </button>
+
+        </div>
       </div>
     </div>
 
     <div class="description">
       <h2>Description</h2>
-      <p>
-        {{ book.description || 'Aucune description disponible pour ce livre.' }}
-      </p>
+      <p>{{ book.description || 'Aucune description disponible pour ce livre.' }}</p>
     </div>
 
-  }
+    <div class="review-form">
+      <h2>Laisser un avis</h2>
 
+      <app-star-rating-view
+        [currentRating]="userRating"
+        [readonly]="hasReviewed"
+        (ratingChange)="userRating = $event" />
+
+      <textarea
+        [(ngModel)]="userComment"
+        placeholder="Ton commentaire..."
+        [disabled]="hasReviewed"
+        rows="4">
+      </textarea>
+
+      <button
+        (click)="submitReview()"
+        [disabled]="hasReviewed || userRating === 0"
+        [class.disabled-btn]="hasReviewed"
+        [title]="hasReviewed ? 'Tu as déjà commenté ce livre' : 'Envoyer mon avis'">
+        {{ hasReviewed ? '✓ Avis déjà envoyé' : 'Envoyer mon avis' }}
+      </button>
+    </div>
+
+    <div class="reviews-list">
+      <h2>Avis des lecteurs</h2>
+      @if (reviews.length === 0) {
+        <p class="no-reviews">Aucun avis pour l'instant.</p>
+      }
+      @for (review of reviews; track review.id) {
+        <div class="review-card">
+          <div class="review-header">
+            <strong>{{ review.username }}</strong>
+            <app-star-rating-view [currentRating]="review.rating" [readonly]="true" />
+          </div>
+          <p>{{ review.comment }}</p>
+        </div>
+      }
+    </div>
+  }
 </div>

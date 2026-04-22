@@ -1,3 +1,4 @@
+
 export interface Book {
   id?: number;
   title: string;
@@ -14,4 +15,5 @@ export interface Book {
     name: string;
   };
   averageRating?: number;
+  reviewCount?: number; // ← ajoute juste ça
 }

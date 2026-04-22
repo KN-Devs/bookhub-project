@@ -1,6 +1,7 @@
 package fr.bookhub.controller;
 
 import fr.bookhub.dto.BookRequest;
+import fr.bookhub.dto.BookResponse;
 import fr.bookhub.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BookController {
 
     private final BooksRepository bookRepository;
@@ -29,14 +31,20 @@ public class BookController {
         return bookRepository.findAll();
     }
 
-    // Trouver un livre par l'ISBN
-    @GetMapping("/{isbn}")
+    @GetMapping("/isbn/{isbn}")
     public ResponseEntity<Book> findByIsbn(@PathVariable String isbn) {
         Book book = bookRepository.findByIsbn(isbn);
         if (book == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(book);
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Book> findById(@PathVariable Integer id) {
+        return bookRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     // CREATE
@@ -57,5 +65,4 @@ public class BookController {
         Book updated = bookService.updateBook(isbn, dto);
         return ResponseEntity.ok(updated);
     }
-
 }

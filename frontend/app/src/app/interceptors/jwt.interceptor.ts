@@ -21,6 +21,7 @@ export class JwtInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
 
+    // Ajout du token uniquement s'il existe
     if (token) {
       request = request.clone({
         setHeaders: {
@@ -31,11 +32,12 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          // Token expiré ou invalide
+        // Gestion automatique de l'expiration de session (401 ou 403)
+        if (error.status === 401 || error.status === 403) {
           this.authService.logout();
           this.router.navigate(['/connection']);
         }
+        // On renvoie l'erreur sans log console pour la discrétion
         return throwError(() => error);
       })
     );

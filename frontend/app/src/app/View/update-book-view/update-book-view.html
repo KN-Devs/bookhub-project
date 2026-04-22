@@ -1,6 +1,6 @@
-<div class="create-container">
+<div class="create-container" *ngIf="book; else loading">
 
-  <h2>Mise a jour du livre {{book.title}}</h2>
+  <h2>Mise à jour du livre {{ book.title }}</h2>
 
   <form [formGroup]="bookForm" (ngSubmit)="submit()">
 
@@ -28,10 +28,12 @@
     <label>ID catégorie</label>
     <input type="number" formControlName="categoryId">
 
-    <button type="submit">
-      Modifier le livre
-    </button>
+    <button type="submit">Modifier le livre</button>
 
   </form>
 
 </div>
+
+<ng-template #loading>
+  <p>Chargement du livre...</p>
+</ng-template>
