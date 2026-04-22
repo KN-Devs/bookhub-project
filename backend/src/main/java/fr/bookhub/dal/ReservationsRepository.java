@@ -16,6 +16,9 @@ public interface ReservationsRepository extends JpaRepository<Reservations, Inte
     // Rang dans la file d'attente
     int countByBookIdAndStatus(int bookId, String status);
 
+    // nombre de réservation par user
+    long countByUserIdAndStatus(int userId, String status);
     // Vérifier si l'user a déjà réservé ce livre
     boolean existsByUserIdAndBookIdAndStatus(int userId, int bookId, String status);
+
 }
