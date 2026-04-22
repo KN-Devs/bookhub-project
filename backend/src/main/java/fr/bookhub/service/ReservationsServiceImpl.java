@@ -8,6 +8,7 @@ import fr.bookhub.dto.ReservationsRequestDTO;
 import fr.bookhub.dto.ReservationsResponseDTO;
 import fr.bookhub.exception.BookAlreadyBorrowedException;
 import fr.bookhub.exception.LoansLimitExceededException;
+import fr.bookhub.exception.ReservationNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -93,6 +94,9 @@ public class ReservationsServiceImpl implements ReservationService{
 
     @Override
     public void deleteReservations(int id) {
-
+        if (!reservationsRepository.existsById(id)) {
+            throw new ReservationNotFoundException(id);
+        }
+        reservationsRepository.deleteById(id);
     }
 }

@@ -119,7 +119,8 @@ export class AllBooksView implements OnInit {
     this.reservationService.createReservation(reservation).subscribe({
       next: (res) => {
         console.log("reservation réussi :", res);
-        this.chargerEmprunts();
+        this.chargerReservations();
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error("Erreur reservation :", err);
