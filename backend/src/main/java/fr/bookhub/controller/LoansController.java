@@ -2,12 +2,15 @@ package fr.bookhub.controller;
 
 import fr.bookhub.bo.User;
 import fr.bookhub.dal.LoansRepository;
+import fr.bookhub.dal.UserRepository;
 import fr.bookhub.dto.LoansRequestDTO;
 import fr.bookhub.dto.LoansResponseDTO;
 import fr.bookhub.service.LoansService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +21,12 @@ public class LoansController {
 
     private final LoansService loansService;
     private final LoansRepository loansRepository;
+    private final UserRepository userRepository;
 
-    public LoansController(LoansService loansService, LoansRepository loansRepository) {
+    public LoansController(LoansService loansService, LoansRepository loansRepository, UserRepository userRepository) {
         this.loansService = loansService;
         this.loansRepository = loansRepository;
+        this.userRepository = userRepository;
     }
 
     // POST /api/loans — Créer un emprunt
@@ -41,8 +46,14 @@ public class LoansController {
     // GET /api/loans/my — Mes emprunts (utilisateur connecté)
     @GetMapping("/my")
     public ResponseEntity<List<LoansResponseDTO>> getMyLoans(
-            @AuthenticationPrincipal User currentUser) {
-        return ResponseEntity.ok(loansService.getLoansByUser(currentUser.getId()));
+            Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        System.out.println("l'utilsiateur est : " + user);
+        return ResponseEntity.ok(
+                loansService.getLoansByUser(user.getId())
+        );
     }
 
     // GET /api/loans/my/active — Nombre d'emprunts actifs de l'user connecté

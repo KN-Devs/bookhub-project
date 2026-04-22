@@ -7,6 +7,7 @@ export interface LoanResponse {
   id: number;
   userId: number;
   bookId: number;
+  bookTitle : string;
   loanDate: string;
   dueDate: string;
   returnDate?: string;

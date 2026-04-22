@@ -41,6 +41,16 @@ public class BookController {
         return ResponseEntity.ok(book);
     }
 
+    // Trouver un livre par l'id
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Book> findByIsbn(@PathVariable int id) {
+        Book book = bookRepository.findById(id);
+        if (book == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(book);
+    }
+
     // CREATE
     @PostMapping
     @PreAuthorize("hasRole('LIBRARIAN')")

@@ -1,6 +1,8 @@
 package fr.bookhub.service;
 
+import fr.bookhub.bo.Book;
 import fr.bookhub.bo.Loans;
+import fr.bookhub.dal.BooksRepository;
 import fr.bookhub.dal.LoansRepository;
 import fr.bookhub.dto.LoansRequestDTO;
 import fr.bookhub.dto.LoansResponseDTO;
@@ -16,9 +18,12 @@ import java.util.stream.Collectors;
 public class LoansServiceImpl implements LoansService {
 
     private final LoansRepository loansRepository;
+    private final BooksRepository bookRepository;
 
-    public LoansServiceImpl(LoansRepository loansRepository) {
+    public LoansServiceImpl(LoansRepository loansRepository,
+                            BooksRepository bookRepository) {
         this.loansRepository = loansRepository;
+        this.bookRepository = bookRepository;
     }
 
     // ─── Mapper BO → DTO ───────────────────────────────────────────────
@@ -31,6 +36,8 @@ public class LoansServiceImpl implements LoansService {
         dto.setDueDate(loan.getDueDate());
         dto.setReturnDate(loan.getReturnDate());
         dto.setStatus(loan.getStatus());
+        dto.setBookTitle(bookRepository.findById(loan.getBookId()).getTitle());
+
         return dto;
     }
 
@@ -58,6 +65,18 @@ public class LoansServiceImpl implements LoansService {
         if (alreadyActive) {
             throw new BookAlreadyBorrowedException(dto.getBookId());
         }
+
+        Book book = bookRepository.findById(dto.getBookId());
+        if (book == null) {
+            throw new BookNotFoundException("livre non trouvé");
+        }
+
+        if (book.getAvailableCopies() <= 0) {
+            throw new BookAlreadyBorrowedException(dto.getBookId());
+        }
+        // réduire stock
+        book.setAvailableCopies(book.getAvailableCopies() - 1);
+        bookRepository.save(book);
 
         // RG-LOAN-02 : durée fixe = 14 jours
         Calendar cal = Calendar.getInstance();
@@ -107,6 +126,15 @@ public class LoansServiceImpl implements LoansService {
         Date now = new Date();
         loan.setReturnDate(now);
         loan.setStatus(now.after(loan.getDueDate()) ? "OVERDUE" : "RETURNED");
+
+        // récupérer le livre
+        Book book = bookRepository.findById(loan.getBookId());
+        if (book == null) {
+            throw new BookNotFoundException("livre non trouvé");
+        }
+        // remettre en stock
+        book.setAvailableCopies(book.getAvailableCopies() + 1);
+        bookRepository.save(book);
 
         return toDTO(loansRepository.save(loan));
     }

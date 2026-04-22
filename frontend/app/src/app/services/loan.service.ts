@@ -24,7 +24,7 @@ export class LoanService {
   }
 
   getLoansByUser(userId: number) {
-    return this.http.get<LoanResponse[]>(`${this.apiUrl}/user/${userId}`);
+    return this.http.get<LoanResponse[]>(`${this.apiUrl}/my`);
   }
 
   getLoansByStatus(status: string) {
@@ -32,7 +32,7 @@ export class LoanService {
   }
 
   returnBook(id: number) {
-    return this.http.patch<LoanResponse>(`${this.apiUrl}/${id}/return`, {});
+    return this.http.put<LoanResponse>(`${this.apiUrl}/${id}/return`, {});
   }
 
   deleteLoan(id: number) {
