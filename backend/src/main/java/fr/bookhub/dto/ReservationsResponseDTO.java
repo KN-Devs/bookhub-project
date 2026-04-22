@@ -2,16 +2,25 @@ package fr.bookhub.dto;
 
 import java.util.Date;
 
-public class ReservationResponseDTO {
+public class ReservationsResponseDTO {
 
     private int id;
     private int userId;
     private int bookId;
+    private String bookTitle;
     private Date reservationDate;
     private int rankInLine;
     private String status;
 
 
+
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

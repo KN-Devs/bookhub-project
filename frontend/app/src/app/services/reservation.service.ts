@@ -11,10 +11,8 @@ export class ReservationService {
 
   constructor(private http: HttpClient) {}
 
-  createReservation(userId: number, bookId: number) {
-    return this.http.post<ReservationResponse>(
-      `${this.apiUrl}?userId=${userId}&bookId=${bookId}`, {}
-    );
+  createReservation(request : ReservationRequest) {
+    return this.http.post<ReservationResponse>(this.apiUrl, request);
   }
 
   getAllReservations() {
@@ -26,7 +24,7 @@ export class ReservationService {
   }
 
   getReservationsByUser(userId: number) {
-    return this.http.get<ReservationResponse[]>(`${this.apiUrl}/user/${userId}`);
+    return this.http.get<ReservationResponse[]>(`${this.apiUrl}/my`);
   }
 
   updateStatus(id: number, newStatus: string) {

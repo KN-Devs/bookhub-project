@@ -6,6 +6,8 @@ import {FormsModule} from '@angular/forms';
 import {AuthService} from '../../services/auth-service';
 import {LoanResponse} from '../../Interface/loan';
 import {LoanService} from '../../services/loan.service';
+import {ReservationService} from '../../services/reservation.service';
+import {ReservationResponse} from '../../Interface/reservation';
 
 @Component({
   selector: 'app-all-books-view',
@@ -27,18 +29,21 @@ export class AllBooksView implements OnInit {
   categoryId: number = 0;
   available: boolean | null = null;
   loans: LoanResponse[] = [];
+  reservations : ReservationResponse[] = [];
 
 
   constructor(private bookService : BookService,
               private cdr : ChangeDetectorRef,
               private authService: AuthService,
-              private loanService: LoanService,) {
+              private loanService: LoanService,
+              private reservationService : ReservationService) {
   }
 
   ngOnInit(): void {
     const user = this.authService.getCurrentUser();
     this.userId = user?.userId;
     this.chargerEmprunts();
+    this.chargerReservations();
     this.chargerLivre();
   }
 
@@ -67,10 +72,25 @@ export class AllBooksView implements OnInit {
       },
     });
   }
+  // @ts-ignore
+  chargerReservations() {
+    this.reservationService.getReservationsByUser(this.userId).subscribe({
+      next: (data) => {
+        this.reservations = data;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
   isBorrowed(bookId: number): boolean {
     return this.loans?.some(
       loan => loan.bookId === bookId && loan.status === 'ACTIVE'
+    ) ?? false;
+  }
+
+  protected isReserved(bookId: number) {
+    return this.reservations?.some(
+      reservations => reservations.bookId === bookId && reservations.status === 'ACTIVE'
     ) ?? false;
   }
 
@@ -92,7 +112,19 @@ export class AllBooksView implements OnInit {
   }
 
   reserver(book: Book) {
-    console.log("Réservation :", book.title);
+    const reservation = {
+      userId: this.userId!,
+      bookId: book.id!
+    };
+    this.reservationService.createReservation(reservation).subscribe({
+      next: (res) => {
+        console.log("reservation réussi :", res);
+        this.chargerEmprunts();
+      },
+      error: (err) => {
+        console.error("Erreur reservation :", err);
+      }
+    });
   }
 
   protected search() {
@@ -126,4 +158,5 @@ export class AllBooksView implements OnInit {
 
     this.cdr.detectChanges();
   }
+
 }

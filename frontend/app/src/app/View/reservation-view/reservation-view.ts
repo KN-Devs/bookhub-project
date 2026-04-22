@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReservationService } from '../../services/reservation.service';
 import { AuthService } from '../../services/auth-service';
@@ -20,7 +20,8 @@ export class ReservationView implements OnInit {
 
   constructor(
     private reservationService: ReservationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -31,7 +32,10 @@ export class ReservationView implements OnInit {
 
   chargerReservations() {
     this.reservationService.getReservationsByUser(this.userId).subscribe({
-      next: (data) => this.reservations = data,
+      next: (data) => {
+        this.reservations = data;
+        this.cdr.detectChanges();
+      },
       error: () => this.erreur = 'Impossible de charger vos réservations.'
     });
   }
