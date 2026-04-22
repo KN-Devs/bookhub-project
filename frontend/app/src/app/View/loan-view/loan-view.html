@@ -14,6 +14,7 @@
   <p *ngIf="loans.length === 0">Vous n'avez aucun emprunt en cours.</p>
 
   <div class="loan-card" *ngFor="let loan of loans">
+    <p><strong>Titre du livre :</strong>{{ loan.bookTitle}}</p>
     <p><strong>Livre ID :</strong> {{ loan.bookId }}</p>
     <p><strong>Emprunté le :</strong> {{ loan.loanDate | date:'dd/MM/yyyy' }}</p>
     <p><strong>À rendre avant le :</strong> {{ loan.dueDate | date:'dd/MM/yyyy' }}</p>

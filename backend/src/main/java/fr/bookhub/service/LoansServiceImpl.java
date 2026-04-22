@@ -1,6 +1,7 @@
 package fr.bookhub.service;
 
 import fr.bookhub.bo.Loans;
+import fr.bookhub.dal.BooksRepository;
 import fr.bookhub.dal.LoansRepository;
 import fr.bookhub.dto.LoansRequestDTO;
 import fr.bookhub.dto.LoansResponseDTO;
@@ -16,9 +17,12 @@ import java.util.stream.Collectors;
 public class LoansServiceImpl implements LoansService {
 
     private final LoansRepository loansRepository;
+    private final BooksRepository bookRepository;
 
-    public LoansServiceImpl(LoansRepository loansRepository) {
+    public LoansServiceImpl(LoansRepository loansRepository,
+                            BooksRepository bookRepository) {
         this.loansRepository = loansRepository;
+        this.bookRepository = bookRepository;
     }
 
     // ─── Mapper BO → DTO ───────────────────────────────────────────────
@@ -31,6 +35,8 @@ public class LoansServiceImpl implements LoansService {
         dto.setDueDate(loan.getDueDate());
         dto.setReturnDate(loan.getReturnDate());
         dto.setStatus(loan.getStatus());
+        dto.setBookTitle(bookRepository.findById(loan.getBookId()).getTitle());
+
         return dto;
     }
 

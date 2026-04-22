@@ -20,6 +20,10 @@ export class BookService {
     return this.http.get<Book>(`${this.apiUrl}/books/${isbn}`);
   }
 
+  getBookById(id: number): Observable<Book> {
+    return this.http.get<Book>(`${this.apiUrl}/books/id/${id}`);
+  }
+
   createBook(requestBody: Book): Observable<Book> {
     if (!requestBody.title || requestBody.title.trim() === '') {
       throw new Error('Le titre est obligatoire');

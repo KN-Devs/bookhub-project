@@ -157,4 +157,5 @@ public class Book {
     public void setAverageRating(Double averageRating) {
         this.averageRating = averageRating;
     }
+
 }

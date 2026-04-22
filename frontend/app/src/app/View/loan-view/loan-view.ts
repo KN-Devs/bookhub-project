@@ -1,8 +1,10 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LoanService } from '../../services/loan.service';
-import { AuthService } from '../../services/auth-service';
-import { LoanResponse } from '../../Interface/loan';
+import {CommonModule} from '@angular/common';
+import {LoanService} from '../../services/loan.service';
+import {AuthService} from '../../services/auth-service';
+import {LoanResponse} from '../../Interface/loan';
+import {BookService} from '../../services/book-service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-loan-view',
@@ -21,8 +23,10 @@ export class LoanView implements OnInit {
   constructor(
     private loanService: LoanService,
     private authService: AuthService,
-  private cdr : ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private bookService: BookService
+  ) {
+  }
 
   ngOnInit() {
     const user = this.authService.getCurrentUser();
@@ -34,7 +38,7 @@ export class LoanView implements OnInit {
     this.loanService.getLoansByUser(this.userId).subscribe({
       next: (data) => {
         this.loans = data;
-          this.cdr.detectChanges();
+        this.cdr.detectChanges();
       },
       error: () => this.erreur = 'Impossible de charger vos emprunts.'
     });
@@ -50,4 +54,5 @@ export class LoanView implements OnInit {
       error: () => this.erreur = 'Erreur lors du retour du livre.'
     });
   }
+
 }

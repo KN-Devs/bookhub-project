@@ -7,6 +7,7 @@ public class LoansResponseDTO {
     private int id;
     private int userId;
     private int bookId;
+    private String bookTitle;
     private Date loanDate;
     private Date dueDate;
     private Date returnDate;
@@ -32,4 +33,11 @@ public class LoansResponseDTO {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
 }
