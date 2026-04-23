@@ -78,7 +78,6 @@
 }
 
 /* ===== BOUTONS ===== */
-
 button {
   width: 80%;
   padding: 8px;
@@ -94,7 +93,6 @@ button {
   background: #3498db;
   color: white;
 }
-
 .button_detail:hover {
   background: #2980b9;
 }
@@ -104,7 +102,6 @@ button {
   background: #2ecc71;
   color: white;
 }
-
 .button_emprunt:hover {
   background: #27ae60;
 }
@@ -114,9 +111,18 @@ button {
   background: #e67e22;
   color: white;
 }
-
 .button_reserve:hover {
   background: #d35400;
+}
+
+/* DISABLED — livre déjà emprunté / réservé */
+.button_emprunter:disabled,
+button:disabled {
+  background-color: #c8c8c8;
+  color: #888;
+  cursor: not-allowed;
+  border-radius: 12px;
+  opacity: 1;
 }
 
 /* RESPONSIVE */
@@ -126,26 +132,22 @@ button {
   }
 }
 
-/* FONCTION DE RECHERCHE */
-
+/* ===== RECHERCHE ===== */
 .search-container {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-
-  padding : 5px;
+  padding: 5px;
   margin: 10px auto;
-
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-
   max-width: 1100px;
-
-  flex-wrap: nowrap; /* 🔥 force une seule ligne */
-  overflow-x: auto;   /* 🔥 évite cassure sur petit écran */
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
+
 .search-container input {
   padding: 10px 14px;
   border: 1px solid #ddd;
@@ -154,7 +156,6 @@ button {
   outline: none;
   transition: 0.2s;
 }
-
 .search-container input:focus {
   border-color: #3498db;
   box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
@@ -169,7 +170,6 @@ button {
   min-width: 180px;
   transition: 0.2s;
 }
-
 .search-container select:focus {
   border-color: #3498db;
   outline: none;
@@ -184,9 +184,28 @@ button {
   cursor: pointer;
   font-weight: 500;
   transition: 0.2s;
+  width: auto;
 }
-
 .search-container button:hover {
   background: #2980b9;
   transform: translateY(-1px);
+}
+
+/* ===== ÉTOILES ===== */
+.stars-display {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.stars-display span {
+  color: #ccc;
+  font-size: 1.2rem;
+}
+.stars-display span.filled {
+  color: gold;
+}
+.stars-display small {
+  margin-left: 4px;
+  color: #888;
+  font-size: 0.85rem;
 }
