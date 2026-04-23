@@ -10,6 +10,7 @@ import {ReservationView} from './View/reservation-view/reservation-view';
 
 import {CreateView} from './View/create-view/create-view';
 import {UpdateBookView} from './View/update-book-view/update-book-view';
+import {AccountView} from './View/account-view/account-view';
 
 
 export const routes: Routes = [
@@ -24,4 +25,6 @@ export const routes: Routes = [
 
   { path: 'createBook', component: CreateView, canActivate: [AuthGuard] },
   { path: 'viewBooks/update/:isbn', component: UpdateBookView, canActivate: [AuthGuard] },
+  { path: 'account', component: AccountView, canActivate: [AuthGuard] },
+
 ];

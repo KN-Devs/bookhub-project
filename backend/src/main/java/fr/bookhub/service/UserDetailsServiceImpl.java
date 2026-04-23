@@ -2,6 +2,7 @@ package fr.bookhub.service;
 
 import fr.bookhub.bo.User;
 import fr.bookhub.dal.UserRepository;
+import fr.bookhub.dto.UserResponseDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,4 +23,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé: " + email));
         return user;
     }
+
+    public UserResponseDTO mapToDTO(User user) {
+        UserResponseDTO dto = new UserResponseDTO();
+        dto.setId(user.getId());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setEmail(user.getEmail());
+        dto.setPhone(user.getPhone());
+        dto.setRoles(user.getRoles());
+        dto.setCreatedAt(user.getCreatedAt());
+        dto.setActive(user.isEnabled());
+        return dto;
+    }
+
+    
+
 }
