@@ -61,7 +61,8 @@
               <small>{{ (averages[book.id!] || 0) | number:'1.1-1' }}/5</small>
             </div>
 
-            <button class="button_detail" [routerLink]="['/viewBooks/detail', book.isbn]">
+
+            <button class="button_detail" [routerLink]="['/viewBooks/detail', book.id]">
               Détail
             </button>
           </div>

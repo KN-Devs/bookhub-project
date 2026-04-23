@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -78,11 +78,17 @@ export class DetailBookView implements OnInit {
     private loanService: LoanService,
     private reservationService: ReservationService,
     private reviewService: ReviewsService,
-    private bookService: BookService
+    private bookService: BookService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.bookId = Number(this.route.snapshot.paramMap.get('id'));
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.bookId = Number(id);
+    } else {
+      console.error("ID de livre manquant dans l'URL");
+    }
 
     this.initUser();
     this.loadBook();
@@ -104,7 +110,10 @@ export class DetailBookView implements OnInit {
   // =========================
   loadBook(): void {
     this.bookService.getBookById(this.bookId).subscribe({
-      next: (data: Book) => this.book = data,
+      next: (data: Book) => {
+        this.book = data;
+        this.cdr.detectChanges();
+      },
       error: (err: any) => console.error(err)
     });
   }
@@ -141,6 +150,7 @@ export class DetailBookView implements OnInit {
         this.reviews = data;
         this.hasCommented = this.reviews.some(r => r.userId === this.userId);
         this.calculateAverage();
+        this.cdr.detectChanges();
       },
       error: (err: any) => console.error(err)
     });

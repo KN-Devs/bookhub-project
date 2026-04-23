@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: 'connection', component: ConnectionView },
   { path: 'register', component: RegisterView },
   { path: 'viewBooks', component: AllBooksView, canActivate: [AuthGuard] },
-  { path: 'viewBooks/detail/:isbn', component: DetailBookView, canActivate: [AuthGuard] },
+  { path: 'viewBooks/detail/:id', component: DetailBookView, canActivate: [AuthGuard] },
 
   { path: 'loans', component: LoanView, canActivate: [AuthGuard] },
   { path: 'reservations', component: ReservationView, canActivate: [AuthGuard] },
