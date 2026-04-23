@@ -25,8 +25,15 @@
     <label>Copies disponibles</label>
     <input type="number" formControlName="availableCopies">
 
-    <label>ID catégorie</label>
-    <input type="number" formControlName="categoryId">
+    <label>Catégorie</label>
+    <select formControlName="categoryId">
+      <option value="">-- Choisir une catégorie --</option>
+      @for (cat of categories; track cat.id) {
+        <option [value]="cat.id">
+          {{ cat.name }}
+        </option>
+      }
+    </select>
 
     <button type="submit">
       Ajouter le livre

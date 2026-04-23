@@ -37,3 +37,11 @@ button {
 button:hover {
   background: #27ae60;
 }
+
+select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}

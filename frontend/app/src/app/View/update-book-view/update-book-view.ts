@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {BookService} from '../../services/book-service';
 import {Book} from '../../Interface/book';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CategoriesService} from '../../services/categories-service';
 
 @Component({
   selector: 'app-update-book-view',
@@ -15,6 +16,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 })
 export class UpdateBookView implements OnInit {
 
+  categories: any[] = [];
   bookForm: FormGroup;
   isbn: string = "";
   book!: Book;
@@ -24,7 +26,8 @@ export class UpdateBookView implements OnInit {
     private bookService: BookService,
     private cdr : ChangeDetectorRef,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private categoriesService : CategoriesService
   ) {
     this.bookForm = this.fb.group({
       title: ['', Validators.required],
@@ -40,22 +43,41 @@ export class UpdateBookView implements OnInit {
 
 
   ngOnInit(): void {
-    this.isbn = this.route.snapshot.paramMap.get('isbn')!;
-    this.bookService.getBookByIsbn(this.isbn).subscribe(data => {
-      this.book = data
-      this.cdr.detectChanges()
-      this.bookForm.patchValue({
-        title: data.title,
-        author: data.author,
-        isbn: data.isbn,
-        description: data.description,
-        coverImage: data.coverImage,
-        totalCopies: data.totalCopies,
-        availableCopies: data.availableCopies,
-        categoryId: data.category?.id
-      });
-    });
+    this.loadCategories();
+    this.loadBook();
+  }
 
+  loadCategories() {
+    this.categoriesService.getAllCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  loadBook() {
+    const isbn = this.route.snapshot.paramMap.get('isbn');
+
+    if (isbn) {
+      this.bookService.getBookByIsbn(isbn).subscribe({
+        next: (data) => {
+          this.book = data;
+
+          this.bookForm.patchValue({
+            title: data.title,
+            author: data.author,
+            isbn: data.isbn,
+            description: data.description,
+            coverImage: data.coverImage,
+            totalCopies: data.totalCopies,
+            availableCopies: data.availableCopies,
+            categoryId: data.category
+          });
+          this.cdr.detectChanges();
+        }
+      });
+    }
   }
 
   submit() {
