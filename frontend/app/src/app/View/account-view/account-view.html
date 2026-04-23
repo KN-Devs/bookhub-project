@@ -1,0 +1,45 @@
+<div class="account-container">
+
+  <h1>Mon compte</h1>
+
+  @if (!user) {
+    <p>Chargement...</p>
+  } @else {
+    <div class="account-card">
+      <div class="profile">
+        <div class="avatar">
+          {{ user.firstName?.charAt(0) }}{{ user.lastName?.charAt(0) }}
+        </div>
+
+        <div class="info">
+          <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+          <p>{{ user.email }}</p>
+          <p>{{ user.phone || 'Téléphone non renseigné' }}</p>
+        </div>
+      </div>
+      <div class="details">
+
+        <p><strong>ID :</strong> {{ user.id }}</p>
+
+        <p><strong>Rôles :</strong> {{ user.roles }}</p>
+
+        <p><strong>Compte créé :</strong>
+          {{ user.createdAt | date:'dd/MM/yyyy' }}
+        </p>
+        <p>
+          <strong>Statut :</strong>
+          <span [class.active]="user.active" [class.inactive]="!user.active">
+            {{ user.active ? 'Actif' : 'Inactif' }}
+          </span>
+        </p>
+
+      </div>
+
+      <div class="actions">
+        <button class="btn primary">Modifier profil</button>
+        <button class="btn danger" (click)="logout()">Se déconnecter</button>
+      </div>
+    </div>
+  }
+
+</div>
