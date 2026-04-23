@@ -41,20 +41,25 @@
           </p>
         }
 
-        @if (activeLoansCount < 3) {
-          @if (book.availableCopies > 0) {
-            <button class="button_emprunt" (click)="emprunter(book)">
-              Emprunter
-            </button>
-          } @else {
-            <button class="button_reserve" (click)="reserver(book)">
-              Réserver
-            </button>
-          }
-        } @else {
-          <p class="loan-limit-warning">
-            Vous avez atteint la limite de 3 emprunts simultanés.
-          </p>
+        @if (isBorrowed(book.id!)) {
+          <button class="button_emprunter" disabled>
+            Livre déjà emprunté
+          </button>
+        }
+        @else if (isReserved(book.id!)) {
+          <button class="button_emprunter" disabled>
+            Livre déjà réservé
+          </button>
+        }
+        @else if (book.availableCopies > 0) {
+          <button class="button_emprunt" (click)="emprunter(book)">
+            Emprunter
+          </button>
+        }
+        @else {
+          <button class="button_reserve" (click)="reserver(book)">
+            Réserver
+          </button>
         }
 
         <button class="button_update" [routerLink]="['/viewBooks/update', book.isbn]">
