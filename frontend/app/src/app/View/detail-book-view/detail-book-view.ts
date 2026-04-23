@@ -1,79 +1,161 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ActivatedRoute, RouterLink} from '@angular/router';
-import {FormsModule} from '@angular/forms';
-import {DecimalPipe} from '@angular/common';
-import {Book} from '../../Interface/book';
-import {BookService} from '../../services/book-service';
-import {AuthService} from '../../services/auth-service';
-import {Reviews} from '../../Interface/review';
-import {ReviewsService} from '../../services/reviews';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
+import { AuthService } from '../../services/auth-service';
+import { LoanService } from '../../services/loan.service';
+import { ReservationService } from '../../services/reservation.service';
+import { BookService } from '../../services/book-service';
+import { ReviewsService } from '../../services/reviews';
+
+
+import { Observable } from 'rxjs';
+
+// =========================
+// INTERFACES
+// =========================
+interface Book {
+  id?: number;
+  title: string;
+  author: string;
+  isbn: string;
+  description?: string;
+  availableCopies: number;
+  totalCopies: number;
+  category?: { name: string };
+}
+
+interface Loan {
+  bookId: number;
+  status: string;
+}
+
+interface Reservation {
+  bookId: number;
+  status: string;
+}
+
+export interface Review {
+  id?: number;
+  rating: number;
+  comment: string;
+  userId: number;
+  bookId: number;
+}
+
+// =========================
+// COMPONENT
+// =========================
 @Component({
   selector: 'app-detail-book-view',
-  imports: [
-    RouterLink,
-    FormsModule,
-    DecimalPipe
-  ],
+  standalone: true,
+  imports: [CommonModule, FormsModule, DecimalPipe, RouterModule],
   templateUrl: './detail-book-view.html',
-  styleUrl: './detail-book-view.css',
+  styleUrls: ['./detail-book-view.css']
 })
 export class DetailBookView implements OnInit {
 
-  isbn: string = '';
   book!: Book;
-  protected activeLoansCount: number = 0;
-  userId: number = 0;
+  reviews: Review[] = [];
 
-  reviews: Reviews[] = [];
-  averageRating: number = 0;
-  averageRounded: number = 0;
+  loans: Loan[] = [];
+  reservations: Reservation[] = [];
+
+  userId!: number;
+  bookId!: number;
+
   selectedRating: number = 0;
   comment: string = '';
   hasCommented: boolean = false;
 
+  averageRating: number = 0;
+  averageRounded: number = 0;
+
   constructor(
     private route: ActivatedRoute,
-    private bookService: BookService,
-    private cdr: ChangeDetectorRef,
-    private reviewsService: ReviewsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private loanService: LoanService,
+    private reservationService: ReservationService,
+    private reviewService: ReviewsService,
+    private bookService: BookService
   ) {}
 
   ngOnInit(): void {
-    const user = this.authService.getCurrentUser();
-    this.userId = user?.userId;
-    this.isbn = this.route.snapshot.paramMap.get('isbn')!;
+    this.bookId = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.initUser();
     this.loadBook();
-    this.loadActiveLoansCount();
+    this.loadLoans();
+    this.loadReservations();
+    this.loadReviews();
+  }
+
+  // =========================
+  // USER
+  // =========================
+  initUser(): void {
     const user = this.authService.getCurrentUser();
-    this.userId = user?.userId;
-    this.chargerEmprunts();
-    this.chargerReservations();
+    if (user) this.userId = user.id;
   }
 
-  private loadBook(): void {
-    this.bookService.getBookByIsbn(this.isbn).subscribe(data => {
-      this.book = data;
-      this.cdr.detectChanges();
-      if (this.book.id) {
-        this.loadReviews(this.book.id);
-        const commented = localStorage.getItem(`commented_${this.book.id}`);
-        if (commented) this.hasCommented = true;
-      }
+  // =========================
+  // BOOK
+  // =========================
+  loadBook(): void {
+    this.bookService.getBookById(this.bookId).subscribe({
+      next: (data: Book) => this.book = data,
+      error: (err: any) => console.error(err)
     });
   }
 
-  private loadReviews(bookId: number): void {
-    this.reviewsService.getReviewsByBook(bookId).subscribe(reviews => {
-      this.reviews = reviews;
-      this.cdr.detectChanges();
+  // =========================
+  // LOANS
+  // =========================
+  loadLoans(): void {
+    this.loanService.getLoansByUser(this.userId).subscribe({
+      next: (data: Loan[]) => this.loans = data
     });
-    this.reviewsService.getAverageRating(bookId).subscribe(res => {
-      this.averageRating = res.average;
-      this.averageRounded = Math.round(res.average);
-      this.cdr.detectChanges();
+  }
+
+  loadReservations(): void {
+    this.reservationService.getReservationsByUser(this.userId).subscribe({
+      next: (data: Reservation[]) => this.reservations = data
     });
+  }
+
+  isBorrowed(bookId: number): boolean {
+    return this.loans.some(l => l.bookId === bookId && l.status === 'ACTIVE');
+  }
+
+  isReserved(bookId: number): boolean {
+    return this.reservations.some(r => r.bookId === bookId && r.status === 'ACTIVE');
+  }
+
+  // =========================
+  // REVIEWS
+  // =========================
+  loadReviews(): void {
+    this.reviewService.getReviewsByBook(this.bookId).subscribe({
+      next: (data: Review[]) => {
+        this.reviews = data;
+        this.hasCommented = this.reviews.some(r => r.userId === this.userId);
+        this.calculateAverage();
+      },
+      error: (err: any) => console.error(err)
+    });
+  }
+
+  calculateAverage(): void {
+    if (this.reviews.length === 0) {
+      this.averageRating = 0;
+      this.averageRounded = 0;
+      return;
+    }
+
+    const sum = this.reviews.reduce((acc, r) => acc + r.rating, 0);
+    this.averageRating = sum / this.reviews.length;
+    this.averageRounded = Math.round(this.averageRating);
   }
 
   selectRating(star: number): void {
@@ -81,89 +163,31 @@ export class DetailBookView implements OnInit {
   }
 
   submitReview(): void {
-    if (!this.selectedRating || !this.comment.trim()) return;
-
-    const review: Reviews = {
-      bookId: this.book.id!,
-      userId: this.userId,
+    const review: Review = {
       rating: this.selectedRating,
       comment: this.comment,
-      moderated: false
+      userId: this.userId,
+      bookId: this.bookId
     };
 
-    this.reviewsService.addReview(review).subscribe({
+    this.reviewService.addReview(review).subscribe({
       next: () => {
-        this.hasCommented = true;
-        localStorage.setItem(`commented_${this.book.id}`, 'true');
-        this.loadReviews(this.book.id!);
         this.comment = '';
         this.selectedRating = 0;
+        this.loadReviews();
       },
-      error: (err) => console.error("Erreur ajout avis :", err)
+      error: (err: any) => console.error(err)
     });
   }
 
-  isBorrowed(bookId: number): boolean {
-    return this.loans?.some(
-      loan => loan.bookId === bookId && loan.status === 'ACTIVE'
-    ) ?? false;
+  // =========================
+  // ACTIONS
+  // =========================
+  emprunter(book: Book): void {
+    console.log('Emprunter', book);
   }
 
-  protected isReserved(bookId: number) {
-    return this.reservations?.some(
-      reservations => reservations.bookId === bookId && reservations.status === 'EN_ATTENTE'
-    ) ?? false;
-  }
-
-  chargerEmprunts() {
-    this.loanService.getLoansByUser(this.userId).subscribe({
-      next: (data) => {
-        this.loans = data;
-        this.cdr.detectChanges();
-        console.log("emprunts :", this.loans);
-      },
-    });
-  }
-  // @ts-ignore
-  chargerReservations() {
-    this.reservationService.getReservationsByUser(this.userId).subscribe({
-      next: (data) => {
-        this.reservations = data;
-        this.cdr.detectChanges();
-      },
-    });
-  }
-
-
-
-
-  private loadActiveLoansCount(): void {
-    this.bookService.getActiveLoansCount().subscribe({
-      next: (count) => {
-        this.activeLoansCount = count;
-        this.cdr.detectChanges();
-      },
-      error: (err) => console.error(err)
-    });
-  }
-
-  protected emprunter(book: Book): void {
-    this.bookService.borrowBook(book.isbn).subscribe({
-      next: () => {
-        this.loadBook();
-        this.loadActiveLoansCount();
-      },
-      error: (err) => console.error(err)
-    });
-  }
-
-  protected reserver(book: Book): void {
-    this.bookService.reserveBook(book.isbn).subscribe({
-      next: () => {
-        this.loadBook();
-        this.loadActiveLoansCount();
-      },
-      error: (err) => console.error(err)
-    });
+  reserver(book: Book): void {
+    console.log('Réserver', book);
   }
 }
