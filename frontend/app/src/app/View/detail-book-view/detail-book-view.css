@@ -3,20 +3,33 @@
   max-width: 1100px;
   margin: 40px auto;
   padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-/* HEADER & LAYOUT */
+/* LOADING */
+.loading {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+}
+
+/* HEADER */
 .book-header {
   display: flex;
+
   gap: 40px;
   background: #ffffff;
   border-radius: 16px;
   padding: 30px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+
+  gap: 30px;
+  flex-direction: row;
   align-items: flex-start;
+
 }
 
+/* IMAGE */
 .cover img {
   width: 220px;
   height: auto;
@@ -25,15 +38,55 @@
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
+/* INFOS */
 .info {
   flex: 1;
 }
 
-/* TYPOGRAPHIE ET BADGES */
-.info h1 { font-size: 28px; margin-bottom: 10px; }
-.author { font-size: 18px; color: #555; margin-bottom: 8px; }
-.isbn { font-size: 13px; color: #777; margin-top: 5px; margin-bottom: 10px; }
+.info h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
 
+.author {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.isbn {
+
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 10px;
+
+  margin-top: 5px;
+  font-size: 13px;
+  color: #777;
+}
+
+.status_ok {
+  color: #1f9d55;
+  font-weight: 600;
+  padding: 4px 10px;
+  display: inline-block;
+  background: #eafaf1;
+  border: 1px solid #b7ebc6;
+  border-radius: 6px;
+}
+
+.status_empty {
+  color: #c0392b;
+  font-weight: 600;
+  padding: 4px 10px;
+  display: inline-block;
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+
+}
+
+/* CATEGORY */
 .category {
   display: inline-block;
   background: #eef3ff;
@@ -44,33 +97,119 @@
   margin-bottom: 12px;
 }
 
-.status_ok { color: #2ecc71; font-weight: bold; background: #eafaf1; padding: 4px 10px; border-radius: 6px; }
-.status_empty { color: #e74c3c; font-weight: bold; background: #fdecea; padding: 4px 10px; border-radius: 6px; }
+/* STOCK */
+.stock {
+  font-size: 15px;
+  margin: 10px 0;
+}
 
-/* ===== BOUTONS (Correction majeure ici) ===== */
+
+/* STATUS */
+.status_ok {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.status_empty {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* RATING */
+.rating {
+  margin: 10px 0;
+  font-weight: 500;
+}
+
+/* BUTTONS BASE */
 button {
+  display: inline-block;
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+/* EMPRUNT */
+
+/* ===== BOUTONS ===== */
+button {
+  margin-top: 10px;
   padding: 10px 20px;
   border: none;
   border-radius: 10px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s ease;
-  display: inline-block; /* Changé de 100% à inline-block */
-  width: auto;           /* Empêche le bouton d'occuper toute la ligne */
-  margin-top: 10px;
-  margin-right: 10px;
+  width: 100%;
 }
 
-.button_emprunt { background-color: #2ecc71; color: white; }
-.button_reserve { background-color: #f39c12; color: white; }
-.button_update { background-color: #3498db; color: white; }
 
-/* Styles pour bouton désactivé (Gris) */
-button:disabled, .button_emprunter, .button_already_commented {
-  background-color: #bdc3c7 !important;
-  color: #7f8c8d !important;
+.button_emprunt {
+  background-color: #2ecc71;
+  color: white;
+}
+.button_emprunt:hover {
+  background-color: #27ae60;
+}
+
+
+/* RESERVE */
+
+
+.button_reserve {
+  background-color: #f39c12;
+  color: white;
+}
+.button_reserve:hover {
+  background-color: #e67e22;
+}
+
+/* DISABLED */
+.button_emprunter {
+  background-color: #bdc3c7;
+  color: #555;
   cursor: not-allowed;
-  opacity: 0.8;
+}
+
+/* UPDATE */
+.button_update {
+  background-color: #3498db;
+  color: white;
+}
+
+.button_update:hover {
+  background-color: #2980b9;
+}
+
+.button_update {
+  background: #3498db;
+  color: white;
+}
+.button_update:hover {
+  background: #2980b9;
+}
+
+/* DISABLED */
+button:disabled {
+  background-color: #c8c8c8;
+  color: #888;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.loan-limit-warning {
+  margin-top: 10px;
+  color: #c0392b;
+  font-size: 14px;
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 8px 12px;
 }
 
 /* ===== DESCRIPTION ===== */
@@ -81,63 +220,186 @@ button:disabled, .button_emprunter, .button_already_commented {
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.06);
 }
-
-/* ===== SECTION AVIS (Le correctif pour ta capture) ===== */
-.reviews-section {
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
+.description h2 {
+  margin-bottom: 10px;
 }
 
-.star-selector {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 15px;
-}
 
-.star-selector span {
-  font-size: 2.5rem; /* Plus grand pour cliquer facilement */
-  cursor: pointer;
-  color: #ccc;
+.description p {
+  color: #555;
+  line-height: 1.6;
 }
-
-.star-selector span.selected {
-  color: gold;
-}
-
-textarea {
-  width: 100%;
-  max-width: 600px; /* Limite la largeur pour éviter le look "étiré" */
-  min-height: 120px;
-  border-radius: 8px;
-  padding: 12px;
-  border: 1px solid #ddd;
-  display: block; /* Force le retour à la ligne */
-  margin-bottom: 15px;
-  box-sizing: border-box;
-}
-
-.button_submit_review {
-  background: #3498db;
-  color: white;
-  width: fit-content; /* Prend uniquement la place nécessaire */
-  padding: 12px 30px;
-  font-size: 16px;
-}
-
-/* LISTE DES AVIS */
-.review-card {
-  background: #f9f9f9;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-left: 5px solid #3498db;
-}
-
-.review-stars span.filled { color: gold; }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .book-header { flex-direction: column; align-items: center; text-align: center; }
-  button { width: 100%; margin-right: 0; }
+  .book-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .cover img {
+    width: 180px;
+  }
+
+  .info {
+    margin-top: 20px;
+  }
+
+  /* ===== ÉTOILES ===== */
+  .stars-display {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin: 8px 0;
+  }
+
+  .stars-display span {
+    color: #ccc;
+    font-size: 1.4rem;
+  }
+
+  .stars-display span.filled {
+    color: gold;
+  }
+
+  .stars-display small {
+    margin-left: 6px;
+    color: #888;
+    font-size: 0.85rem;
+  }
+
+  /* ===== SECTION AVIS ===== */
+  .reviews-section {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  .reviews-section h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+
+  /* FORMULAIRE */
+  .review-form {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    margin-bottom: 30px;
+  }
+
+  .review-form h3 {
+    margin: 0 0 14px 0;
+    font-size: 18px;
+  }
+
+  .star-selector {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+
+  .star-selector span {
+    font-size: 2rem;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.2s;
+  }
+
+  .star-selector span.selected {
+    color: gold;
+  }
+
+  .star-selector span:hover {
+    color: #f0c040;
+  }
+
+  textarea {
+    width: 100%;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    outline: none;
+    transition: 0.2s;
+    box-sizing: border-box;
+  }
+
+  textarea:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  }
+
+  .button_submit_review {
+    background: #3498db;
+    color: white;
+    width: 100%;
+  }
+
+  .button_submit_review:hover:not(:disabled) {
+    background: #2980b9;
+    transform: translateY(-1px);
+  }
+
+  .button_submit_review:disabled {
+    background-color: #c8c8c8;
+    color: #888;
+    cursor: not-allowed;
+  }
+
+  /* BOUTON DÉJÀ COMMENTÉ */
+  .button_already_commented {
+    background-color: #c8c8c8;
+    color: #888;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    width: 100%;
+    cursor: not-allowed;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  /* LISTE DES AVIS */
+  .reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .no-reviews {
+    color: #888;
+    font-style: italic;
+  }
+
+  .review-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .review-stars span {
+    color: #ccc;
+    font-size: 1.2rem;
+  }
+
+  .review-stars span.filled {
+    color: gold;
+  }
+
+  .review-comment {
+    margin: 8px 0 0 0;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.5;
+
+  }
 }

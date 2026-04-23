@@ -6,7 +6,6 @@ import {AuthService} from '../../../services/auth-service';
 @Component({
   selector: 'app-header-view',
   imports: [
-    SearchView,
     RouterLink
   ],
   templateUrl: './header-view.html',
