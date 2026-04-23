@@ -46,6 +46,10 @@ export class DetailBookView implements OnInit {
     this.isbn = this.route.snapshot.paramMap.get('isbn')!;
     this.loadBook();
     this.loadActiveLoansCount();
+    const user = this.authService.getCurrentUser();
+    this.userId = user?.userId;
+    this.chargerEmprunts();
+    this.chargerReservations();
   }
 
   private loadBook(): void {
@@ -98,6 +102,40 @@ export class DetailBookView implements OnInit {
       error: (err) => console.error("Erreur ajout avis :", err)
     });
   }
+
+  isBorrowed(bookId: number): boolean {
+    return this.loans?.some(
+      loan => loan.bookId === bookId && loan.status === 'ACTIVE'
+    ) ?? false;
+  }
+
+  protected isReserved(bookId: number) {
+    return this.reservations?.some(
+      reservations => reservations.bookId === bookId && reservations.status === 'EN_ATTENTE'
+    ) ?? false;
+  }
+
+  chargerEmprunts() {
+    this.loanService.getLoansByUser(this.userId).subscribe({
+      next: (data) => {
+        this.loans = data;
+        this.cdr.detectChanges();
+        console.log("emprunts :", this.loans);
+      },
+    });
+  }
+  // @ts-ignore
+  chargerReservations() {
+    this.reservationService.getReservationsByUser(this.userId).subscribe({
+      next: (data) => {
+        this.reservations = data;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+
+
 
   private loadActiveLoansCount(): void {
     this.bookService.getActiveLoansCount().subscribe({

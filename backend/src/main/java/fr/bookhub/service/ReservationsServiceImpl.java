@@ -45,12 +45,15 @@ public class ReservationsServiceImpl implements ReservationService{
             throw new BookAlreadyBorrowedException(dto.getBookId());
         }
 
+        int maxRank = reservationsRepository.findMaxRankByBookId(dto.getBookId());
+        int newRank = maxRank + 1;
+
         Reservations reservations = new Reservations();
         reservations.setReservationDate(new Date());
         reservations.setBookId(dto.getBookId());
         reservations.setStatus("EN_ATTENTE");
         reservations.setUserId(dto.getUserId());
-        reservations.setRankInLine(1);
+        reservations.setRankInLine(newRank);
 
 
         return toDTO(reservationsRepository.save(reservations));

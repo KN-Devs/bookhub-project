@@ -4,6 +4,10 @@ import fr.bookhub.bo.Loans;
 import fr.bookhub.dal.LoansRepository;
 import fr.bookhub.dto.LoansRequestDTO;
 import fr.bookhub.dto.LoansResponseDTO;
+import fr.bookhub.dal.BooksRepository;
+import fr.bookhub.dal.ReservationsRepository;
+import fr.bookhub.bo.Reservations;
+import fr.bookhub.bo.Book;
 import fr.bookhub.exception.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +17,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -23,6 +32,13 @@ class LoansServiceImplTest {
 
     @Mock
     private LoansRepository loansRepository;
+
+
+    @Mock
+    private BooksRepository bookRepository;
+
+    @Mock
+    private ReservationsRepository reservationsRepository;
 
     @InjectMocks
     private LoansServiceImpl loansService;
@@ -106,5 +122,44 @@ class LoansServiceImplTest {
         // WHEN & THEN
         assertThatThrownBy(() -> loansService.createLoan(validRequest))
                 .isInstanceOf(BookAlreadyBorrowedException.class);
+    }
+
+    @Test
+    void returnBook_shouldUpdateBookAndReservationStatus() {
+
+        // 🔥 GIVEN
+        Loans loan = new Loans();
+        loan.setId(1);
+        loan.setBookId(10);
+        loan.setDueDate(new Date(System.currentTimeMillis() - 100000)); // en retard
+
+        Book book = new Book();
+        book.setId(10);
+        book.setAvailableCopies(1);
+
+        Reservations reservation = new Reservations();
+        reservation.setId(5);
+        reservation.setBookId(10);
+        reservation.setRankInLine(1);
+        reservation.setStatus("EN_ATTENTE");
+
+        // mocks
+        when(loansRepository.findById(1)).thenReturn(Optional.of(loan));
+        when(reservationsRepository.findByBookIdOrderByRankInLineAsc(10))
+                .thenReturn(List.of(reservation));
+
+        // 🔥 WHEN
+        loansService.returnBook(1);
+
+        // 🔥 THEN
+
+        // book stock augmenté
+        assertEquals(2, book.getAvailableCopies());
+
+        // réservation passée en DISPONIBLE
+        assertEquals("DISPONIBLE", reservation.getStatus());
+
+        verify(bookRepository).save(book);
+        verify(reservationsRepository).save(reservation);
     }
 }

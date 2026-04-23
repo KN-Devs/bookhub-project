@@ -2,8 +2,10 @@ package fr.bookhub.service;
 
 import fr.bookhub.bo.Book;
 import fr.bookhub.bo.Loans;
+import fr.bookhub.bo.Reservations;
 import fr.bookhub.dal.BooksRepository;
 import fr.bookhub.dal.LoansRepository;
+import fr.bookhub.dal.ReservationsRepository;
 import fr.bookhub.dto.LoansRequestDTO;
 import fr.bookhub.dto.LoansResponseDTO;
 import fr.bookhub.exception.*;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,11 +22,13 @@ public class LoansServiceImpl implements LoansService {
 
     private final LoansRepository loansRepository;
     private final BooksRepository bookRepository;
+    private final ReservationsRepository reservationsRepository;
 
     public LoansServiceImpl(LoansRepository loansRepository,
-                            BooksRepository bookRepository) {
+                            BooksRepository bookRepository, ReservationsRepository reservationsRepository) {
         this.loansRepository = loansRepository;
         this.bookRepository = bookRepository;
+        this.reservationsRepository = reservationsRepository;
     }
 
     // ─── Mapper BO → DTO ───────────────────────────────────────────────
@@ -135,6 +140,20 @@ public class LoansServiceImpl implements LoansService {
         // remettre en stock
         book.setAvailableCopies(book.getAvailableCopies() + 1);
         bookRepository.save(book);
+
+        //Mettre à jour la file d'attente
+        Optional<Reservations> next =
+                reservationsRepository
+                        .findByBookIdOrderByRankInLineAsc(book.getId())
+                        .stream()
+                        .findFirst();
+        if (next.isPresent()) {
+            Reservations r = next.get();
+            r.setStatus("DISPONIBLE");
+            reservationsRepository.save(r);
+
+            reservationsRepository.shiftRanks(book.getId(), r.getRankInLine());
+        }
 
         return toDTO(loansRepository.save(loan));
     }

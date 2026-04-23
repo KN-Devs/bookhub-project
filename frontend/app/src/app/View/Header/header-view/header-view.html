@@ -9,16 +9,15 @@
 
   <!-- COLONNE 2 -->
   <div class="center">
-    <app-search-view></app-search-view>
   </div>
 
   <!-- COLONNE 3 -->
   <div class="right">
-    <button [routerLink]="['/createBook']">Ajout</button>
-    <button>Compte</button>
+    <a routerLink="/createBook">Ajout</a>
+    <a routerLink="/">Compte</a>
     <a routerLink="/loans">Mes emprunts</a>
     <a routerLink="/reservations">Mes réservations</a>
-    <button (click)="logout()">Se déconnecter</button>
+    <a (click)="logout()">Se déconnecter</a>
   </div>
 
 </header>
