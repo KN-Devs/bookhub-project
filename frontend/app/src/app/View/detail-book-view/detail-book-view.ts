@@ -7,6 +7,10 @@ import {BookService} from '../../services/book-service';
 import {AuthService} from '../../services/auth-service';
 import {Reviews} from '../../Interface/review';
 import {ReviewsService} from '../../services/reviews';
+import {LoanResponse} from '../../Interface/loan';
+import {ReservationResponse} from '../../Interface/reservation';
+import {LoanService} from '../../services/loan.service';
+import {ReservationService} from '../../services/reservation.service';
 
 @Component({
   selector: 'app-detail-book-view',
@@ -31,13 +35,17 @@ export class DetailBookView implements OnInit {
   selectedRating: number = 0;
   comment: string = '';
   hasCommented: boolean = false;
+  loans: LoanResponse[] = [];
+  reservations : ReservationResponse[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private bookService: BookService,
     private cdr: ChangeDetectorRef,
     private reviewsService: ReviewsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private loanService : LoanService,
+    private reservationService : ReservationService
   ) {}
 
   ngOnInit(): void {
