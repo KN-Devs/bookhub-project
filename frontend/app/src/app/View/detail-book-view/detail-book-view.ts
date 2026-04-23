@@ -54,8 +54,6 @@ export class DetailBookView implements OnInit {
     this.isbn = this.route.snapshot.paramMap.get('isbn')!;
     this.loadBook();
     this.loadActiveLoansCount();
-    const user = this.authService.getCurrentUser();
-    this.userId = user?.userId;
     this.chargerEmprunts();
     this.chargerReservations();
   }
