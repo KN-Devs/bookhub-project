@@ -4,16 +4,16 @@ import {FormsModule} from '@angular/forms';
 import {DecimalPipe} from '@angular/common';
 import {Book} from '../../Interface/book';
 import {BookService} from '../../services/book-service';
+import {AuthService} from '../../services/auth-service';
 import {Reviews} from '../../Interface/review';
 import {ReviewsService} from '../../services/reviews';
-
 
 @Component({
   selector: 'app-detail-book-view',
   imports: [
     RouterLink,
-    FormsModule,   // ← pour [(ngModel)]
-    DecimalPipe    // ← pour le pipe | number
+    FormsModule,
+    DecimalPipe
   ],
   templateUrl: './detail-book-view.html',
   styleUrl: './detail-book-view.css',
@@ -23,8 +23,8 @@ export class DetailBookView implements OnInit {
   isbn: string = '';
   book!: Book;
   protected activeLoansCount: number = 0;
+  userId: number = 0;
 
-  // ⭐ Avis
   reviews: Reviews[] = [];
   averageRating: number = 0;
   averageRounded: number = 0;
@@ -36,10 +36,13 @@ export class DetailBookView implements OnInit {
     private route: ActivatedRoute,
     private bookService: BookService,
     private cdr: ChangeDetectorRef,
-    private reviewsService: ReviewsService
+    private reviewsService: ReviewsService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    const user = this.authService.getCurrentUser();
+    this.userId = user?.userId;
     this.isbn = this.route.snapshot.paramMap.get('isbn')!;
     this.loadBook();
     this.loadActiveLoansCount();
@@ -49,10 +52,8 @@ export class DetailBookView implements OnInit {
     this.bookService.getBookByIsbn(this.isbn).subscribe(data => {
       this.book = data;
       this.cdr.detectChanges();
-      // ⭐ Une fois le livre chargé, on charge les avis avec son id
       if (this.book.id) {
         this.loadReviews(this.book.id);
-        // Vérifie si l'utilisateur a déjà commenté ce livre
         const commented = localStorage.getItem(`commented_${this.book.id}`);
         if (commented) this.hasCommented = true;
       }
@@ -71,17 +72,16 @@ export class DetailBookView implements OnInit {
     });
   }
 
-  // ⭐ Sélection d'une étoile
   selectRating(star: number): void {
     this.selectedRating = star;
   }
 
-  // ⭐ Poster un avis
   submitReview(): void {
     if (!this.selectedRating || !this.comment.trim()) return;
 
     const review: Reviews = {
       bookId: this.book.id!,
+      userId: this.userId,
       rating: this.selectedRating,
       comment: this.comment,
       moderated: false
