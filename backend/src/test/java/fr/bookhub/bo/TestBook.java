@@ -3,6 +3,7 @@ package fr.bookhub.bo;
 
 import fr.bookhub.dal.BooksRepository;
 import fr.bookhub.dal.CategoriesRepository;
+import fr.bookhub.bo.Categories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import fr.bookhub.dal.CategoriesRepository;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
