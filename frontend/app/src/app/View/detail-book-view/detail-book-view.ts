@@ -1,12 +1,16 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ActivatedRoute, RouterLink} from '@angular/router';
-import {FormsModule} from '@angular/forms';
-import {DecimalPipe} from '@angular/common';
-import {Book} from '../../Interface/book';
-import {BookService} from '../../services/book-service';
-import {AuthService} from '../../services/auth-service';
-import {Reviews} from '../../Interface/review';
-import {ReviewsService} from '../../services/reviews';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
+import { Book } from '../../Interface/book';
+import { BookService } from '../../services/book-service';
+import { AuthService } from '../../services/auth-service';
+import { Reviews } from '../../Interface/review';
+import { ReviewsService } from '../../services/reviews';
+import { LoanService } from '../../services/loan.service'; // Ajouté
+import { ReservationService } from '../../services/reservation.service'; // Ajouté
+import { LoanResponse } from '../../Interface/loan'; // Ajouté
+import { ReservationResponse } from '../../Interface/reservation'; // Ajouté
 
 @Component({
   selector: 'app-detail-book-view',
@@ -22,9 +26,9 @@ export class DetailBookView implements OnInit {
 
   isbn: string = '';
   book!: Book;
-  protected activeLoansCount: number = 0;
   userId: number = 0;
 
+  // Avis
   reviews: Reviews[] = [];
   averageRating: number = 0;
   averageRounded: number = 0;
@@ -32,22 +36,26 @@ export class DetailBookView implements OnInit {
   comment: string = '';
   hasCommented: boolean = false;
 
+  // État des emprunts et réservations
+  loans: LoanResponse[] = [];
+  reservations: ReservationResponse[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private bookService: BookService,
     private cdr: ChangeDetectorRef,
     private reviewsService: ReviewsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private loanService: LoanService,          // Injecté
+    private reservationService: ReservationService // Injecté
   ) {}
 
   ngOnInit(): void {
     const user = this.authService.getCurrentUser();
     this.userId = user?.userId;
     this.isbn = this.route.snapshot.paramMap.get('isbn')!;
+
     this.loadBook();
-    this.loadActiveLoansCount();
-    const user = this.authService.getCurrentUser();
-    this.userId = user?.userId;
     this.chargerEmprunts();
     this.chargerReservations();
   }
@@ -76,6 +84,7 @@ export class DetailBookView implements OnInit {
     });
   }
 
+  // --- Actions pour les Avis ---
   selectRating(star: number): void {
     this.selectedRating = star;
   }
@@ -95,11 +104,34 @@ export class DetailBookView implements OnInit {
       next: () => {
         this.hasCommented = true;
         localStorage.setItem(`commented_${this.book.id}`, 'true');
+
+        // IMPORTANT : Recharger les données pour vider le "Aucun avis"
         this.loadReviews(this.book.id!);
+
         this.comment = '';
         this.selectedRating = 0;
+        this.cdr.detectChanges(); // Force Angular à voir le changement
       },
       error: (err) => console.error("Erreur ajout avis :", err)
+    });
+  }
+
+  // --- Logique Emprunts & Réservations ---
+  chargerEmprunts() {
+    this.loanService.getLoansByUser(this.userId).subscribe({
+      next: (data) => {
+        this.loans = data;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  chargerReservations() {
+    this.reservationService.getReservationsByUser(this.userId).subscribe({
+      next: (data) => {
+        this.reservations = data;
+        this.cdr.detectChanges();
+      },
     });
   }
 
@@ -111,59 +143,35 @@ export class DetailBookView implements OnInit {
 
   protected isReserved(bookId: number) {
     return this.reservations?.some(
-      reservations => reservations.bookId === bookId && reservations.status === 'EN_ATTENTE'
+      res => res.bookId === bookId && res.status === 'EN_ATTENTE'
     ) ?? false;
   }
 
-  chargerEmprunts() {
-    this.loanService.getLoansByUser(this.userId).subscribe({
-      next: (data) => {
-        this.loans = data;
-        this.cdr.detectChanges();
-        console.log("emprunts :", this.loans);
-      },
-    });
-  }
-  // @ts-ignore
-  chargerReservations() {
-    this.reservationService.getReservationsByUser(this.userId).subscribe({
-      next: (data) => {
-        this.reservations = data;
-        this.cdr.detectChanges();
-      },
-    });
-  }
-
-
-
-
-  private loadActiveLoansCount(): void {
-    this.bookService.getActiveLoansCount().subscribe({
-      next: (count) => {
-        this.activeLoansCount = count;
-        this.cdr.detectChanges();
-      },
-      error: (err) => console.error(err)
-    });
-  }
-
   protected emprunter(book: Book): void {
-    this.bookService.borrowBook(book.isbn).subscribe({
+    const loan = {
+      userId: this.userId,
+      bookId: book.id!
+    };
+    this.loanService.createLoan(loan).subscribe({
       next: () => {
-        this.loadBook();
-        this.loadActiveLoansCount();
+        this.loadBook(); // Rafraîchir les infos du livre (ex: copies dispos)
+        this.chargerEmprunts(); // Rafraîchir la liste des emprunts
       },
-      error: (err) => console.error(err)
+      error: (err) => console.error("Erreur emprunt :", err)
     });
   }
 
   protected reserver(book: Book): void {
-    this.bookService.reserveBook(book.isbn).subscribe({
+    const reservation = {
+      userId: this.userId,
+      bookId: book.id!
+    };
+    this.reservationService.createReservation(reservation).subscribe({
       next: () => {
         this.loadBook();
-        this.loadActiveLoansCount();
+        this.chargerReservations();
       },
-      error: (err) => console.error(err)
+      error: (err) => console.error("Erreur réservation :", err)
     });
   }
 }
