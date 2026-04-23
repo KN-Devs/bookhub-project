@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {Reviews} from '../Interface/review';
+import {Review} from '../View/detail-book-view/detail-book-view';
 
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +20,7 @@ export class ReviewsService {
     return this.http.get<{ average: number }>(`${this.apiUrl}/book/${bookId}/average`);
   }
 
-  addReview(review: Reviews): Observable<Reviews> {
+  addReview(review: Review): Observable<Reviews> {
     return this.http.post<Reviews>(this.apiUrl, review);
   }
 }
