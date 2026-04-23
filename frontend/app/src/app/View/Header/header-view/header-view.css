@@ -36,3 +36,66 @@
 .logo:hover {
   opacity: 0.7;
 }
+
+/* LIENS */
+.right a {
+  position: relative;
+  color: black;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 6px 4px;
+  transition: 0.2s;
+}
+
+/* HOVER EFFET SOUS-LIGNE */
+.right a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: black;
+  transition: width 0.3s;
+}
+
+.right a:hover::after {
+  width: 100%;
+}
+
+/* HOVER TEXTE */
+.right a:hover {
+  opacity: 0.9;
+}
+
+/* BOUTON LOGOUT (option visuelle) */
+.right a:last-child {
+  background: rgba(255,255,255,0.15);
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.right a:last-child:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    height: auto;
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .right {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+}
