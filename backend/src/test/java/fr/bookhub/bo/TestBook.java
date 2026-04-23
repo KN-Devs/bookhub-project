@@ -27,8 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY) // Utilise H2 en mémoire
-
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Rollback(false)
 
