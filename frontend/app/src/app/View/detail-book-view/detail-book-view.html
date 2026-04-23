@@ -35,11 +35,13 @@
           <p class="status_empty">Indisponible</p>
         }
 
-        @if (book.averageRating !== undefined) {
-          <p class="rating">
-            {{ book.averageRating }} / 5
-          </p>
-        }
+        <!-- ⭐ Note moyenne -->
+        <div class="stars-display">
+          @for (star of [1,2,3,4,5]; track star) {
+            <span [class.filled]="star <= averageRounded">★</span>
+          }
+          <small>{{ averageRating | number:'1.1-1' }}/5</small>
+        </div>
 
         @if (isBorrowed(book.id!)) {
           <button class="button_emprunter" disabled>
@@ -74,6 +76,68 @@
       <p>
         {{ book.description || 'Aucune description disponible pour ce livre.' }}
       </p>
+    </div>
+
+    <!-- ===== SECTION AVIS ===== -->
+    <div class="reviews-section">
+
+      <h2>Avis des lecteurs</h2>
+
+      <!-- Formulaire OU bouton grisé si déjà commenté -->
+      @if (!hasCommented) {
+        <div class="review-form">
+          <h3>Laisser un avis</h3>
+
+          <!-- Sélection étoiles -->
+          <div class="star-selector">
+            @for (star of [1,2,3,4,5]; track star) {
+              <span
+                (click)="selectRating(star)"
+                [class.selected]="star <= selectedRating">
+                ★
+              </span>
+            }
+          </div>
+
+          <!-- Commentaire -->
+          <textarea
+            [(ngModel)]="comment"
+            placeholder="Votre commentaire..."
+            rows="4">
+          </textarea>
+
+          <button
+            class="button_submit_review"
+            (click)="submitReview()"
+            [disabled]="!selectedRating || !comment.trim()">
+            Poster mon avis
+          </button>
+        </div>
+
+      } @else {
+        <button disabled class="button_already_commented">
+          Tu as déjà commenté ce livre
+        </button>
+      }
+
+      <!-- Liste des avis -->
+      <div class="reviews-list">
+        @if (reviews.length === 0) {
+          <p class="no-reviews">Aucun avis pour ce livre pour le moment.</p>
+        } @else {
+          @for (review of reviews; track review.id) {
+            <div class="review-card">
+              <div class="review-stars">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <span [class.filled]="star <= review.rating">★</span>
+                }
+              </div>
+              <p class="review-comment">{{ review.comment }}</p>
+            </div>
+          }
+        }
+      </div>
+
     </div>
 
   }

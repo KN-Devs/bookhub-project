@@ -3,25 +3,29 @@ import {Book} from '../../Interface/book';
 import {BookService} from '../../services/book-service';
 import {RouterLink} from '@angular/router';
 import {FormsModule} from '@angular/forms';
+import {DecimalPipe} from '@angular/common';
 import {AuthService} from '../../services/auth-service';
 import {LoanResponse} from '../../Interface/loan';
 import {LoanService} from '../../services/loan.service';
 import {ReservationService} from '../../services/reservation.service';
 import {ReservationResponse} from '../../Interface/reservation';
+import {ReviewsService} from '../../services/reviews';
+
 
 @Component({
   selector: 'app-all-books-view',
   imports: [
     RouterLink,
-    FormsModule
+    FormsModule,
+    DecimalPipe  // ← pour le pipe | number
   ],
   templateUrl: './all-books-view.html',
   styleUrl: './all-books-view.css',
 })
 export class AllBooksView implements OnInit {
 
-  public books : Book[] = [];
-  public booksAffichage : Book[] = [];
+  public books: Book[] = [];
+  public booksAffichage: Book[] = [];
 
   userId: number = 0;
 
@@ -29,14 +33,17 @@ export class AllBooksView implements OnInit {
   categoryId: number = 0;
   available: boolean | null = null;
   loans: LoanResponse[] = [];
-  reservations : ReservationResponse[] = [];
+  reservations: ReservationResponse[] = [];
 
+  // ⭐ Notes moyennes par bookId
+  averages: { [bookId: number]: number } = {};
 
-  constructor(private bookService : BookService,
-              private cdr : ChangeDetectorRef,
+  constructor(private bookService: BookService,
+              private cdr: ChangeDetectorRef,
               private authService: AuthService,
               private loanService: LoanService,
-              private reservationService : ReservationService) {
+              private reservationService: ReservationService,
+              private reviewsService: ReviewsService) {
   }
 
   ngOnInit(): void {
@@ -47,14 +54,21 @@ export class AllBooksView implements OnInit {
     this.chargerLivre();
   }
 
-  chargerLivre(){
+  chargerLivre() {
     this.bookService.getAllBooks().subscribe({
       next: (data) => {
         this.books = data;
         this.booksAffichage = data;
         this.cdr.detectChanges();
-        console.log("les data:", data);
-        console.log("Livres chargées:", this.books);
+        // ⭐ Charger la note moyenne de chaque livre
+        this.books.forEach(book => {
+          if (book.id) {
+            this.reviewsService.getAverageRating(book.id).subscribe(res => {
+              this.averages[book.id!] = res.average;
+              this.cdr.detectChanges();
+            });
+          }
+        });
       },
       error: (err) => {
         console.error("Erreur API:", err);
@@ -62,16 +76,20 @@ export class AllBooksView implements OnInit {
     });
   }
 
+  // ⭐ Arrondi pour les étoiles
+  getAverageRounded(bookId: number): number {
+    return Math.round(this.averages[bookId] || 0);
+  }
 
   chargerEmprunts() {
     this.loanService.getLoansByUser(this.userId).subscribe({
       next: (data) => {
         this.loans = data;
         this.cdr.detectChanges();
-        console.log("emprunts :", this.loans);
       },
     });
   }
+
   // @ts-ignore
   chargerReservations() {
     this.reservationService.getReservationsByUser(this.userId).subscribe({
@@ -93,7 +111,6 @@ export class AllBooksView implements OnInit {
       reservations => reservations.bookId === bookId && reservations.status === 'EN_ATTENTE'
     ) ?? false;
   }
-
 
   emprunter(book: Book) {
     const loan = {
@@ -130,13 +147,11 @@ export class AllBooksView implements OnInit {
 
   protected search() {
     this.booksAffichage = this.books;
-    // filtre catégorie
-    if (this.categoryId >0) {
+    if (this.categoryId > 0) {
       this.booksAffichage = this.booksAffichage.filter(
         book => book.category?.id === this.categoryId
       );
     }
-    // filtre disponibilité
     if (this.available === true) {
       this.booksAffichage = this.booksAffichage.filter(
         book => book.availableCopies > 0
@@ -147,7 +162,6 @@ export class AllBooksView implements OnInit {
         book => book.availableCopies === 0
       );
     }
-
     const query = this.searchText.toLowerCase().trim();
     if (query.length > 0) {
       this.booksAffichage = this.booksAffichage.filter(book =>
@@ -156,8 +170,6 @@ export class AllBooksView implements OnInit {
         book.isbn.toLowerCase().includes(query)
       );
     }
-
     this.cdr.detectChanges();
   }
-
 }

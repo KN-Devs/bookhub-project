@@ -36,7 +36,7 @@
 
     <div class="books-grid">
       @for (book of booksAffichage; track book.isbn) {
-        <div class="book-card" >
+        <div class="book-card">
           <h3>{{ book.title }}</h3>
           <img
             class="cover"
@@ -52,6 +52,15 @@
               [class.unavailable]="(book.availableCopies<=0)">
               {{ (book.availableCopies>0) ? 'Disponible' : 'Indisponible' }}
             </span>
+
+            <!-- ⭐ Note moyenne -->
+            <div class="stars-display">
+              @for (star of [1,2,3,4,5]; track star) {
+                <span [class.filled]="star <= getAverageRounded(book.id!)">★</span>
+              }
+              <small>{{ (averages[book.id!] || 0) | number:'1.1-1' }}/5</small>
+            </div>
+
             <button class="button_detail" [routerLink]="['/viewBooks/detail', book.isbn]">
               Détail
             </button>

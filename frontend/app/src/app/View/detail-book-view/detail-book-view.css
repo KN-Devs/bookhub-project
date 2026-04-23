@@ -16,11 +16,17 @@
 /* HEADER */
 .book-header {
   display: flex;
+
   gap: 40px;
   background: #ffffff;
   border-radius: 16px;
   padding: 30px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+
+  gap: 30px;
+  flex-direction: row;
+  align-items: flex-start;
+
 }
 
 /* IMAGE */
@@ -49,9 +55,35 @@
 }
 
 .isbn {
+
   font-size: 14px;
   color: #888;
   margin-bottom: 10px;
+
+  margin-top: 5px;
+  font-size: 13px;
+  color: #777;
+}
+
+.status_ok {
+  color: #1f9d55;
+  font-weight: 600;
+  padding: 4px 10px;
+  display: inline-block;
+  background: #eafaf1;
+  border: 1px solid #b7ebc6;
+  border-radius: 6px;
+}
+
+.status_empty {
+  color: #c0392b;
+  font-weight: 600;
+  padding: 4px 10px;
+  display: inline-block;
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+
 }
 
 /* CATEGORY */
@@ -70,6 +102,7 @@
   font-size: 15px;
   margin: 10px 0;
 }
+
 
 /* STATUS */
 .status_ok {
@@ -102,21 +135,36 @@ button {
 }
 
 /* EMPRUNT */
+
+/* ===== BOUTONS ===== */
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+  width: 100%;
+}
+
+
 .button_emprunt {
   background-color: #2ecc71;
   color: white;
 }
-
 .button_emprunt:hover {
   background-color: #27ae60;
 }
 
+
 /* RESERVE */
+
+
 .button_reserve {
   background-color: #f39c12;
   color: white;
 }
-
 .button_reserve:hover {
   background-color: #e67e22;
 }
@@ -138,7 +186,33 @@ button {
   background-color: #2980b9;
 }
 
-/* DESCRIPTION */
+.button_update {
+  background: #3498db;
+  color: white;
+}
+.button_update:hover {
+  background: #2980b9;
+}
+
+/* DISABLED */
+button:disabled {
+  background-color: #c8c8c8;
+  color: #888;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.loan-limit-warning {
+  margin-top: 10px;
+  color: #c0392b;
+  font-size: 14px;
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+/* ===== DESCRIPTION ===== */
 .description {
   margin-top: 30px;
   background: #ffffff;
@@ -146,10 +220,10 @@ button {
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.06);
 }
-
 .description h2 {
   margin-bottom: 10px;
 }
+
 
 .description p {
   color: #555;
@@ -171,4 +245,150 @@ button {
   .info {
     margin-top: 20px;
   }
+
+/* ===== ÉTOILES ===== */
+.stars-display {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 8px 0;
+}
+.stars-display span {
+  color: #ccc;
+  font-size: 1.4rem;
+}
+.stars-display span.filled {
+  color: gold;
+}
+.stars-display small {
+  margin-left: 6px;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+/* ===== SECTION AVIS ===== */
+.reviews-section {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.reviews-section h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+/* FORMULAIRE */
+.review-form {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  margin-bottom: 30px;
+}
+
+.review-form h3 {
+  margin: 0 0 14px 0;
+  font-size: 18px;
+}
+
+.star-selector {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.star-selector span {
+  font-size: 2rem;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.2s;
+}
+.star-selector span.selected {
+  color: gold;
+}
+.star-selector span:hover {
+  color: #f0c040;
+}
+
+textarea {
+  width: 100%;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  resize: vertical;
+  outline: none;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+textarea:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+}
+
+.button_submit_review {
+  background: #3498db;
+  color: white;
+  width: 100%;
+}
+.button_submit_review:hover:not(:disabled) {
+  background: #2980b9;
+  transform: translateY(-1px);
+}
+.button_submit_review:disabled {
+  background-color: #c8c8c8;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* BOUTON DÉJÀ COMMENTÉ */
+.button_already_commented {
+  background-color: #c8c8c8;
+  color: #888;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  width: 100%;
+  cursor: not-allowed;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* LISTE DES AVIS */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.no-reviews {
+  color: #888;
+  font-style: italic;
+}
+
+.review-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.review-stars span {
+  color: #ccc;
+  font-size: 1.2rem;
+}
+.review-stars span.filled {
+  color: gold;
+}
+
+.review-comment {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
+
 }
