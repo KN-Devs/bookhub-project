@@ -17,8 +17,6 @@ import {User} from '../../Interface/user';
   styleUrl: './account-view.css',
 })
 export class AccountView {
-  loansCount = 0;
-  reservationsCount = 0;
 
   constructor(private bookService: BookService,
               private cdr: ChangeDetectorRef,
